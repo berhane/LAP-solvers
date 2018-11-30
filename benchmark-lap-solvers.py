@@ -3,11 +3,13 @@
 # Tests the performance of linear assignment problem solvers for cost matrices
 # of different sizes.  In particular, we'll be comparing
 # 1) linear_sum_assignment - version provided in scipy
-# 2) munkres - a Python implementation provided by Brian Clapper (https://github.com/bmc/munkres)
-# 3) hungarian - a wrapper to a C++ implementation Knuth's Hungarian \
-#    algorithm provided by Harold Cooper at https://github.com/Hrldcpr/Hungarian
-# 4) lapjv - a wrapper to a C++ implementation of Jonker-Volgenant algorithm for solving LAP 
-#    problems provided by Tomas Kazmar - (https://github.com/gatagat/lap)
+#    https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.linear_sum_assignment.html
+# 2) munkres - a Python implementation provided by Brian Clapper
+#   https://github.com/bmc/munkres
+# 3) hungarian - a wrapper to a C++ implementation Knuth's Hungarian algorithm provided by Harold Cooper
+#   https://github.com/Hrldcpr/Hungarian
+# 4) lapjv - a wrapper to a C++ implementation of Jonker-Volgenant algorithm provided by Tomas Kazmar
+#   https://github.com/gatagat/lap)
 #
 # They all formally have O(n^3) complexity, but their performance differs substantially based on
 # their implementation.
@@ -31,7 +33,7 @@ def main():
     of different sizes.
     """
     epilog = """
-    The script  will provide the following:
+    The script  will produce the following:
     1) data of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
     2) plot of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
     """
@@ -46,7 +48,7 @@ def main():
 
     base = 2                                    # will build matrices of size base^n
     min = int(np.ceil(np.log2(args.min)))      # 2^min =  8x8 cost matrix
-    max = int(np.ceil(np.log2(args.max)))      # 2^max       
+    max = int(np.ceil(np.log2(args.max)))      # 2^max
     # The size of the matrix to be solved is limited to 2^{limit['method']}
     # for each method to ensure quick termination of the benchmarking exercise.
     # unkres and Scipy are considerably slower, making it necessary to limit them to smaller
@@ -54,14 +56,14 @@ def main():
     limit = {}
     limit['lapjv'] = max
     limit['hungarian'] = max
-    limit['scipy'] = 9 
+    limit['scipy'] = 9
     limit['munkres'] = 7
     print "Solving matrices of sizes up to limit 2^{n} where n is " + str(limit)
     n_cycles = 3     # will run for n_cycles and average the timing information
-    methods = ["lapjv", "hungarian", "scipy", "munkres"]  
-    t_methods = ["t_" + i for i in methods]  
-    label_methods = ["label_" + i for i in methods]  
-    run_methods = ["run_" + i for i in methods]  
+    methods = ["lapjv", "hungarian", "scipy", "munkres"]
+    t_methods = ["t_" + i for i in methods]
+    label_methods = ["label_" + i for i in methods]
+    run_methods = ["run_" + i for i in methods]
     #print methods
     for i in range(len(methods)):
         t_methods[i] = np.empty((0,2),float)
@@ -77,17 +79,17 @@ def main():
                 #print '%20s\t' %(methods[method])
                 if methods[method] == 'munkres' and i <= limit[methods[method]]:
                     temp_methods[method] += run_munkres(cost_matrix)
-                    #print temp_methods[method] 
+                    #print temp_methods[method]
                 elif methods[method] == 'scipy' and i <= limit[methods[method]]:
                     temp_methods[method] += run_scipy(cost_matrix)
-                    #print temp_methods[method] 
+                    #print temp_methods[method]
                 elif methods[method] == 'hungarian' and i <= limit[methods[method]]:
                     temp_methods[method] += run_hungarian(cost_matrix)
-                    #print temp_methods[method] 
+                    #print temp_methods[method]
                 elif methods[method] == 'lapjv' and i <= limit[methods[method]]:
                     temp_methods[method] += run_lapjv(cost_matrix)
-                    #print temp_methods[method] 
-                else: 
+                    #print temp_methods[method]
+                else:
                     pass
 
         # average the timing information from n_cycles
@@ -97,12 +99,12 @@ def main():
 
     # print timing information to screen
     np.set_printoptions(suppress=True,precision=5)
-    print '%10s '  % ("Matrix size"), 
+    print '%10s '  % ("Matrix size"),
     x=t_methods[0][:,[0]]
     x=x.flatten()
     print x
     for method in range(len(methods)):
-        print '%10s '  % ( methods[method]), 
+        print '%10s '  % ( methods[method]),
         y=t_methods[method][:,[1]]
         y=y.flatten()
         print(y)
@@ -111,7 +113,7 @@ def main():
     fig, ax = plt.subplots()
     for method in range(len(methods)):
         '''
-        # Fit timing information to get a sense of the real scaling 
+        # Fit timing information to get a sense of the real scaling
         #print methods[method]
         #print t_methods[method]
         x=t_methods[method][:,[0]]
@@ -126,7 +128,7 @@ def main():
         '''
         plt.scatter(t_methods[method][:,[0]],t_methods[method][:,[1]],label=methods[method])
         plt.loglog(t_methods[method][:,[0]],t_methods[method][:,[1]],basex=2,basey=10)
-    
+
     plt.grid(True,which="both")
     ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
     plt.xlabel('Matrix dimension (2^n)', fontsize=14)

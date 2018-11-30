@@ -4,16 +4,15 @@ The script benchmarks the performance of four linear assignment problem solvers
 for cost matrices of different sizes.  These solvers are:
 
 * **linear_sum_assignment** - version provided in scipy
-* **munkres** - a Python implementation provided by Brian Clapper (https://github.com/bmc/munkres)
-* **hungarian** - a wrapper to a C++ implementation Knuth's Hungarian algorithm provided by Harold Cooper at https://github.com/Hrldcpr/Hungarian
-* **munkres** - a Python implementation provided by Brian Clapper (https://github.com/bmc/munkres)
+  * https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.linear_sum_assignment.html
+* **munkres** - a Python implementation provided by Brian Clapper
+    * https://github.com/bmc/munkres
+* **hungarian** - a wrapper to a C++ implementation Knuth's Hungarian algorithm provided by Harold Cooper
+  * https://github.com/Hrldcpr/Hungarian
+* **lapjv** - a wrapper to a C++ implementation of Jonker-Volgenant algorithm provided by Tomas Kazmar
+  * https://github.com/gatagat/lap
 
- They all formally have O(n^3) complexity, but their performance differs substantially based on
- their implementation.
-
-ArbAlign is a small tool for optimally aligning two arbitrarily ordered isomers using the
-Hungarian or Kuhn-Munkres algorithm. The final ordering of the two isomers should give the lowest
-root mean-square distance (RMSD) between the two structures.
+They all formally have O(n<sup>3</sup>) complexity, but their performance differs substantially based on their implementation and the size of the matrix they are trying to solve. The purpose of this benchmarking exercise is to see which implementation performs best for a given matrix size. My interest is to use this information to improve the performance of [Arbalign](https://github.com/gatagat/lap) and expand its use.
 
 # Contents
 The repo contains the following items:
@@ -22,40 +21,64 @@ The repo contains the following items:
 # Usage
 It's simple once you have installed the necessary packages.
 
-Usage: `benchmark-lap-solvers.py`
+```
+Usage: benchmark-lap-solvers.py [-h] [--min [min]] [--max [max]]
+                                [--ncyc [n_cycles]]
 
+    Benchmarks the performance of linear assignment problem solvers for random cost matrices
+    of different sizes.
+
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --min [min]        minimum size of cost matrix to solve. The default is 8x8
+                     (2^3 x 2^3)
+  --max [max]        maximum size of cost matrix to solve. The default is
+                     4096x4096 (2^12 x 2^12)
+  --ncyc [n_cycles]  number of times to solve cost matrices and average their
+                     timing. The default is 3 cycles
+
+    The script  will produce the following:
+    1) data of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
+    2) plot of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
+```
 
 # Requirements
-## Python 2.7+
-* Python Numpy module. If you don't have it already, you can install it using `pip`
- * `pip install numpy`
-* Python Hungarian module by Harold Cooper
-  * Hungarian: Munkres' Algorithm for the Linear Assignment Problem in Python (https://github.com/Hrldcpr/Hungarian)
-  * This is a wrapper to a fast C++ implementation of the Kuhn-Munkres algorithm. The installation instructions are described clearly at https://github.com/Hrldcpr/Hungarian.
-  * In short, one would need to go into the `hungarian` directory and
-    * `python setup.py build`  
-    * `python setup.py install`
-    * You would either want to copy the file `build/lib-XXX/hungarian.so` into a location that's
-      included in your `$PYTHONPATH` or whatever directory you are running ArbAlign from.
-* Alternatively, you can use Brian Clapper's Munkres module or another similar module includeded in SciNumpy. This could require you to make small changes to the current script. We'll provide an version that uses SciNumpy's Munkres module at a later time.
-
-## Other Tools Needed to Align by Atom Type or Connectivity
-* OpenBabel - We use OpenBabel to convert Cartesian coordinates (XYZ) to formats containing atmm types including connectivity and hybridization information. It is necessary to use OpenBabel to convert the Cartesian coordinates to SYBYL Mol2 (sy2) and MNA (mna) formats.
-* genTypes.csh - a small shell script which converts XYZ file to SYBYL Mol2 (sy2) format and recasts the atom label to contain atom type information.
-* genConn.csh - a small shell script which converts XYZ file to NMA (nma) format and recasts the atom label to contain atom's bonding/connectivity information.
-
+* Python numpy module. If you don't have it already, you can install it using `pip`
+  * `pip install numpy`
+* Python scipy module.
+  * `pip install  scipy`
+* Python matplotlib module.
+  * `pip install   matplotlib`
+* Python `hungarian` module by Harold Cooper.
+  * `pip install   hungarian`
+* Python `lap` module by Tomas Kozmar.
+  * `pip install lap`
+* Python `munkres` module by Brian Clapper.
+    * `pip install munkres`
 
 # Output
-If the pairs of structures pass a sanity test, the tool will align them optimally and provide the
-following information.
-* The initial Kabsch RMSD,
-* The Kuhn-Munkres reorderings for each atom and the corresponding RMSDs,
-* The final Kabsch RMSD after the application of the Kuhn-Munkres algorithm, and
-* The coordinates corresponding to the best alignment of the second structure with the first.
+The script  will produce the following:
+* data of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
 
-# Citation
-If you find this tool useful for any publishable work, please cite the companion paper:
+<pre>
+Solving matrices of sizes up to limit 2^{n} where n is
+{'munkres': 7, 'scipy': 9, 'hungarian': 12, 'lapjv': 12}
+8 x 8
+16 x 16
+32 x 32
+64 x 64
+128 x 128
+256 x 256
+512 x 512
+1024 x 1024
+2048 x 2048
 
-Berhane Temelso, Joel M. Mabey, Toshiro Kubota, Nana Appiah-padi, George C. Shields.  `J. Chem. Info. Model.` **2017**, 57 (5), 1045–1054
+Matrix size  [   8      16       32      64     128     256     512     1024    2048]
+     lapjv  [0.00007 0.00004 0.00005 0.00009 0.00035 0.00136 0.01013 0.06211 0.19604]
+ hungarian  [0.00001 0.00001 0.00003 0.00013 0.00083 0.00472 0.03273 0.22168 1.69292]
+     scipy  [0.00031 0.00052 0.00135 0.00386 0.02158 0.09982 1.11753]
+   munkres  [0.00029 0.00118 0.00517 0.03652 0.28729]
+</pre>
 
-http://doi.org/10.1021/acs.jcim.6b00546
+* plot of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
