@@ -12,7 +12,7 @@ for cost matrices of different sizes.  These solvers are:
 * **lapjv** - a wrapper to a C++ implementation of Jonker-Volgenant algorithm provided by Tomas Kazmar
   * https://github.com/gatagat/lap
 
-They all formally have O(n<sup>3</sup>) complexity, but their performance differs substantially based on their implementation and the size of the matrix they are trying to solve. The purpose of this benchmarking exercise is to see which implementation performs best for a given matrix size. My interest is to use this information to improve the performance of [Arbalign](https://github.com/gatagat/lap) and expand its use.
+They all formally have O(n<sup>3</sup>) complexity, but their performance differs substantially based on their implementation and the size of the matrix they are trying to solve. The purpose of this benchmarking exercise is to see which implementation performs best for a given matrix size. My interest is to use this information to improve the performance of [Arbalign](https://github.com/berhane/arbalign) and expand its use.
 
 # Contents
 The repo contains the following items:
@@ -84,3 +84,10 @@ Matrix size  [   8      16       32      64     128     256     512     1024    
 * plot of timing for LAP solving random cost matrices of sizes 2<sup>min</sup> - 2<sup>max</sup>
 
 ![alt text](images/figure-1.png "benchmark test")
+
+# Takeaways
+
+1. `scipy` and `munkres` are much less efficient than `hungarian` and `lapjv` for all matrix sizes
+2. `hungarian` performs better than `lapjv` for matrices of size less than 64x64. For Anything larger than 256x256, `lapjv` is about an order of magnitude faster than `hungarian`
+3. `lapjv` is am implementation intended to solve dense metrices. Its sparse matrix solver analog named `lapmod` is more efficient for larger sparse matrices. Both are implemented in the `lap` module.
+4. For the purposes of improving [Arbalign](https://github.com/berhane/arbalign), `hungarian` remains the best choice for most molecular systems I'm interested in which don't have more than 100 atoms of the same type. However, if the tool is to be applied to larger molecules such as proteins and DNA, it would be worthwhile to use `lapjv` or even `lapmod`
