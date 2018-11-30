@@ -31,16 +31,16 @@ Usage: benchmark-lap-solvers.py [-h] [--min [min]] [--max [max]]
 
 optional arguments:
   -h, --help         show this help message and exit
-  --min [min]        minimum size of cost matrix to solve. The default is 8x8
+  --min [min]        minimum dimension of cost matrix to solve. The default is 8
                      (2^3 x 2^3)
-  --max [max]        maximum size of cost matrix to solve. The default is
-                     4096x4096 (2^12 x 2^12)
+  --max [max]        maximum dimension of cost matrix to solve. The default is 4096
+                     (2^12 x 2^12)
   --ncyc [n_cycles]  number of times to solve cost matrices and average their
                      timing. The default is 3 cycles
 
     The script  will produce the following:
-    1) data of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
-    2) plot of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
+    1) data of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
+    2) plot of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
 ```
 
 # Requirements
@@ -63,7 +63,7 @@ The script  will produce the following:
 
 <pre>
 Solving matrices of sizes up to limit 2^{n} where n is
-{'munkres': 7, 'scipy': 9, 'hungarian': 12, 'lapjv': 12}
+{'munkres': 7, 'scipy': 9, 'hungarian': 13, 'lapjv': 13}
 8 x 8
 16 x 16
 32 x 32
@@ -73,12 +73,13 @@ Solving matrices of sizes up to limit 2^{n} where n is
 512 x 512
 1024 x 1024
 2048 x 2048
+4096 x 4096
 
-Matrix size  [   8      16       32      64     128     256     512     1024    2048]
-     lapjv  [0.00007 0.00004 0.00005 0.00009 0.00035 0.00136 0.01013 0.06211 0.19604]
- hungarian  [0.00001 0.00001 0.00003 0.00013 0.00083 0.00472 0.03273 0.22168 1.69292]
-     scipy  [0.00031 0.00052 0.00135 0.00386 0.02158 0.09982 1.11753]
-   munkres  [0.00029 0.00118 0.00517 0.03652 0.28729]
+Matrix size  [   8      16       32      64     128     256     512     1024    2048   4096]
+     lapjv  [0.00007 0.00003 0.00004 0.00008 0.00022 0.00149 0.00574 0.03733 0.22209  1.14318]
+ hungarian  [0.00001 0.00001 0.00002 0.00011 0.00066 0.00472 0.03157 0.21561 1.71368 14.11281]
+     scipy  [0.0004  0.00044 0.00086 0.00353 0.01809 0.10358 1.01071]
+   munkres  [0.00033 0.00091 0.00445 0.03216 0.25957]
 </pre>
 
 * plot of timing for LAP solving random cost matrices of sizes 2<sup>min</sup> - 2<sup>max</sup>

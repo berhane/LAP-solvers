@@ -30,18 +30,18 @@ def main():
     # Parse arguments and provide usage information
     description = """
     Benchmarks the performance of linear assignment problem solvers for random cost matrices
-    of different sizes.
+    of different dimensions.
     """
     epilog = """
     The script  will produce the following:
-    1) data of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
-    2) plot of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
+    1) data of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
+    2) plot of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
     """
     parser = argparse.ArgumentParser( description=description, formatter_class=argparse.RawDescriptionHelpFormatter,epilog=epilog)
     parser.add_argument('--min', metavar='min', nargs='?', type=int, default=8, \
-           help='minimum size of cost matrix to solve. The default is 8x8 (2^3 x 2^3)')
+           help='minimum dimension of cost matrix to solve. The default is 8 (2^3 x 2^3)')
     parser.add_argument('--max', metavar='max', nargs='?', type=int, default=4096, \
-           help='maximum size of cost matrix to solve. The default is 4096x4096 (2^12 x 2^12)')
+           help='maximum dimension of cost matrix to solve. The default is 4096 (2^12 x 2^12)')
     parser.add_argument('--ncyc', metavar='n_cycles', nargs='?', type=int, default=3, \
            help='number of times to solve cost matrices and average their timing. The default is 3 cycles')
     args = parser.parse_args()
@@ -131,8 +131,8 @@ def main():
 
     plt.grid(True,which="both")
     ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
-    plt.xlabel('Matrix dimension (2^n)', fontsize=14)
-    plt.ylabel('Real time to solution (seconds)',fontsize=14)
+    plt.xlabel('Matrix dimension (2^n)', fontsize=18)
+    plt.ylabel('Real time to solution (seconds)',fontsize=18)
     plt.title('Time to solve LAPs using different modules',fontsize=20)
     plt.legend(fontsize=14)
     plt.show()
