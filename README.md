@@ -81,4 +81,6 @@ Matrix size  [   8      16       32      64     128     256     512     1024    
    munkres  [0.00029 0.00118 0.00517 0.03652 0.28729]
 </pre>
 
-* plot of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
+* plot of timing for LAP solving random cost matrices of sizes 2<sup>min</sup> - 2<sup>max</sup>
+
+![alt text](images/figure-1.png "benchmark test")
