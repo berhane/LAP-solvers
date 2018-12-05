@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 #
 # Tests the performance of linear assignment problem solvers for cost matrices
 # of different sizes.  In particular, we'll be comparing
@@ -22,6 +22,7 @@ from scipy.optimize import linear_sum_assignment
 from scipy.optimize import curve_fit
 import hungarian
 import lap
+import lapjv
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 
@@ -53,13 +54,16 @@ def main():
     # for each method to ensure quick termination of the benchmarking exercise.
     # unkres and Scipy are considerably slower, making it necessary to limit them to smaller
     # matrices
-    methods = ["lap_lapjv", "hungarian", "scipy", "munkres"]
+
+    # METHODS 
+    methods = ["lap_lapjv", "lapjv_lapjv", "hungarian", "scipy", "munkres"]
     limit = {}
     limit['lap_lapjv'] = max
+    limit['lapjv_lapjv'] = max
     limit['hungarian'] = max
     limit['scipy'] = 9
     limit['munkres'] = 7
-    print "Solving matrices of sizes up to limit 2^{n} where n is " + str(limit)
+    print("Solving matrices of sizes up to limit 2^{n} where n is " + str(limit))
     n_cycles = 3     # will run for n_cycles and average the timing information
     t_methods = ["t_" + i for i in methods]
     label_methods = ["label_" + i for i in methods]
@@ -70,7 +74,7 @@ def main():
         #print t_methods[i]
     for i in range(min,max):
         matrix_size = pow(base,i)
-        print str(matrix_size) + " x " + str(matrix_size)
+        print(str(matrix_size) + " x " + str(matrix_size))
         temp_methods = np.zeros(len(methods),float)
         for j in range(n_cycles):
             cost_matrix = np.random.random((matrix_size, matrix_size))
@@ -89,6 +93,9 @@ def main():
                 elif methods[method] == 'lap_lapjv' and i <= limit[methods[method]]:
                     temp_methods[method] += run_lap_lapjv(cost_matrix)
                     #print temp_methods[method]
+                elif methods[method] == 'lapjv_lapjv' and i <= limit[methods[method]]:
+                    temp_methods[method] += run_lapjv_lapjv(cost_matrix)
+                    #print temp_methods[method]
                 else:
                     pass
 
@@ -99,12 +106,12 @@ def main():
 
     # print timing information to screen
     np.set_printoptions(suppress=True,precision=5)
-    print '%10s '  % ("Matrix size"),
+    print('%10s '  % ("Matrix size"), end=" ")
     x=t_methods[0][:,[0]]
     x=x.flatten()
-    print x
+    print(x)
     for method in range(len(methods)):
-        print '%10s '  % ( methods[method]),
+        print('%10s '  % ( methods[method]),end=" ")
         y=t_methods[method][:,[1]]
         y=y.flatten()
         print(y)
@@ -112,20 +119,6 @@ def main():
     # generate plot
     fig, ax = plt.subplots()
     for method in range(len(methods)):
-        '''
-        # Fit timing information to get a sense of the real scaling
-        #print methods[method]
-        #print t_methods[method]
-        x=t_methods[method][:,[0]]
-        x=x.flatten()
-        #print x
-        y=t_methods[method][:,[1]]
-        y=y.flatten()
-        #print y
-        popt, pcov = curve_fit(lambda t,a,b: a+b*t, np.log(x), np.log(y))
-        label_methods[method] = str(methods[method]) + ' scaling = ' + str(round(popt[1],2))
-        plt.scatter(t_methods[method][:,[0]],t_methods[method][:,[1]],label=label_methods[method])
-        '''
         plt.scatter(t_methods[method][:,[0]],t_methods[method][:,[1]],label=methods[method])
         plt.loglog(t_methods[method][:,[0]],t_methods[method][:,[1]],basex=2,basey=10)
 
@@ -138,10 +131,18 @@ def main():
     plt.show()
 
 # Solve LAP using different methods
-#LAPJV
+#LAP.LAPJV
 def run_lap_lapjv(matrix):
     t_start=time.time()
     cost, x, y = lap.lapjv(matrix)
+    #print x
+    t_end=time.time()
+    return t_end-t_start
+
+#LAPJV.LAPJV
+def run_lapjv_lapjv(matrix):
+    t_start=time.time()
+    x, y, _ = lapjv.lapjv(matrix)
     #print x
     t_end=time.time()
     return t_end-t_start
