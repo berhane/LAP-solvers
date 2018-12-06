@@ -51,18 +51,20 @@ Eg: `./benchmark-lap-solvers.py` which is equivalent to
 If you want to add other solvers to the list, it should be easy to figure out what parts to update in the scripts.
 
 # Requirements
-* Python numpy module. If you don't have it already, you can install it using `pip[2/3]`
+* `numpy` module. If you don't have it already, you can install it using `pip[2/3]`
   * `pip[2/3] install numpy`
-* Python scipy module.
-  * `pip[2/3] install  scipy`
-* Python matplotlib module.
+* `matplotlib` module.
   * `pip[2/3] install   matplotlib`
-* Python `hungarian` module by Harold Cooper.
+* scipy module.
+  * `pip[2/3] install  scipy`
+* `munkres` module by Brian Clapper.
+   * `pip[2/3] install munkres`
+* `hungarian` module by Harold Cooper.
   * `pip[2/3] install   hungarian`
-* Python `lap` module by Tomas Kozmar.
+* `lap` module by Tomas Kozmar.
   * `pip[2/3] install lap`
-* Python `munkres` module by Brian Clapper.
-    * `pip[2/3] install munkres`
+* `lapjv` module by source{d} for Python3
+  * `pip3 install lapjv`
 
 # Output
 The script  will produce output similar to this. **The output here corresponds to an average of three Python2/3 runs on a 2015 MacBook Air with Intel® Core™ i5-5250U Processor and 8GB RAM**
@@ -71,8 +73,8 @@ The script  will produce output similar to this. **The output here corresponds t
 * data of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
 
 <pre>
-Solving matrices of sizes up to limit 2^{n} where n is
-{'munkres': 7, 'scipy': 9, 'hungarian': 13, 'lap.lapjv': 13}
+Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 13, 'lap.lapjv': 13}
+
 8 x 8
 16 x 16
 32 x 32
@@ -128,5 +130,5 @@ lapjv_lapjv  [0.00006  0.00001  0.00002  0.00005  0.00042  0.00192  0.01294  0.0
 2. `hungarian` performs better than `lap.lapjv` and `lapjv.lapjv` for matrices of size less than 16x16. For Anything larger than 256x256, `lap.lapjv` and `lapjv.lapjv` are about an order of magnitude faster than `hungarian`
 3. `lap.lapjv` is am implementation intended to solve dense matrices. Its sparse matrix solver analog named `lap.lapmod` is more efficient for larger sparse matrices. Both are implemented in the `lap` module.
 4. `lapjv.lapjv` has the best performance virtually for all matrix sizes.
-5. There is definitely a need to check that all these methods reach the same solutions.
-5. For the purposes of improving [Arbalign](https://github.com/berhane/arbalign), `hungarian` remains the best choice for most molecular systems I'm interested in, which don't have more than 100 atoms of the same type. However, if the tool is to be applied to larger molecules such as proteins and DNA, it would be worthwhile to use `lap.lapjv` or even `lap.lapmod`
+5. There is definitely a need to check that all these methods reach the same solutions/assigments.
+5. For the purposes of improving [Arbalign](https://github.com/berhane/arbalign), `hungarian` remains a good choice for most molecular systems I'm interested in which don't have more than 100x100 distance matrices the same type to solve. However, if the tool is to be applied to larger molecules such as proteins and DNA, it would be worthwhile to use `lapjv.lapjv`, `lap.lapjv` or `lap.lapmod`
