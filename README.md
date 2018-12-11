@@ -1,16 +1,16 @@
 # Purpose
 
-The scripts benchmark the performance of four/five Python2/3 linear assignment problem solvers for cost matrices of different sizes.  These solvers are:
+The scripts benchmark the performance of four/five Python2/3 linear assignment problem solvers for random cost matrices of different sizes.  These solvers are:
 
-* **linear_sum_assignment** - version provided in scipy
+* **linear_sum_assignment** - a Python implementation of the Hungarian algorithm provided in SciPy
   * https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.linear_sum_assignment.html
-* **munkres** - a Python implementation provided by Brian Clapper
+* **munkres** - a Python implementation of the Hungarian algorithm provided by Brian Clapper
     * https://github.com/bmc/munkres
 * **hungarian** - a wrapper to a C++ implementation Knuth's Hungarian algorithm provided by Harold Cooper
   * https://github.com/Hrldcpr/Hungarian
 * **lap.lapjv** - a wrapper to a C++ implementation of Jonker-Volgenant algorithm provided by Tomas Kazmar
   * https://github.com/gatagat/lap
-* **lapjv.lapjv** - a wrapper to a C++ implementation of Jonker-Volgenant algorithm re-written for Python 3 by source{d}
+* **lapjv.lapjv** - a wrapper to a C++ implementation of Jonker-Volgenant algorithm re-written for Python 3 and optimized to take advantage of AVX2 instruction sets by Vadim Markovtsev at src{d}. Please see the [blog post here](https://blog.sourced.tech/post/lapjv/)
     * https://github.com/src-d/lapjv  
 
 They all formally have O(n<sup>3</sup>) complexity, but their performance differs substantially based on their implementation and the size of the matrix they are trying to solve. The purpose of this benchmarking exercise is to see which implementation performs best for a given matrix size. My interest is to use this information to improve the performance of [Arbalign](https://github.com/berhane/arbalign) and expand its use.
@@ -50,7 +50,7 @@ optional arguments:
     1) data of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
     2) plot of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
 ```
-
+<!--
 ## Examples
 | command   |      execution    |  note     |
 |----------|:-------------:|:-------|
@@ -58,7 +58,7 @@ optional arguments:
 | `./benchmark-lap-solvers-py3.py --min 2 --max 512` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 2 --max 512` | default, except it looks at small matrices only |
 | `./benchmark-lap-solvers-py3.py -np` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096 -np` | default, except plotting is suppressed |
 | `./benchmark-lap-solvers-py3.py --printcost` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096 --printcost` | default, except it prints lowest cost for each method |
-
+-->
 
 If you want to add other solvers to the list, it should be easy to figure out what parts to update in the scripts.
 
@@ -109,7 +109,7 @@ Matrix size  [   8      16       32      64     128     256     512     1024    
 
 ![alt text](images/figure-py2.png "Python2 benchmark test")
 
-If requested via the `--printcost` flag, it will also print the lowest cost predicted by each implementation. This test ensures that the methods are making consistent assignments.
+If requested via the `--printcost` flag, it will also print the minimum cost for each random cost matrix by each implementation. This test ensures that the methods are making consistent/correct assignments.
 <pre>
 8 x 8 ... cycle
 ('Cycle ', '0 ')
@@ -128,8 +128,8 @@ If requested via the `--printcost` flag, it will also print the lowest cost pred
         Scipy_cost    7.654
       Munkres_cost    7.654
 .
-,
-,
+.
+.
 2048 x 2048 ... cycle
 ('Cycle ', '0 ')
     lap_lapjv_cost    3388.642
