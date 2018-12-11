@@ -52,9 +52,9 @@ optional arguments:
 ```
 
 ## Examples
-| command   |      execution    |       |
+| command   |      execution    |  note     |
 |----------|:-------------:|: -------|
-| `./benchmark-lap-solvers-py3.py` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096` | default
+| `./benchmark-lap-solvers-py3.py` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096` | default |
 | `./benchmark-lap-solvers-py3.py --min 2 --max 512` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 2 --max 512` | default, except it looks at small matrices only |
 | `./benchmark-lap-solvers-py3.py -np` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096 -np` | default, except plotting is suppressed |
 | `./benchmark-lap-solvers-py3.py --printcost` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096 --printcost` | default, except it prints lowest cost for each method |
