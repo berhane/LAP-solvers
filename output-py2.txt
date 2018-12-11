@@ -1,16 +1,143 @@
-Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 12, 'lapjv': 12}
-8 x 8
-16 x 16
-32 x 32
-64 x 64
-128 x 128
-256 x 256
-512 x 512
-1024 x 1024
-2048 x 2048
+Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'lap_lapjv': 12, 'scipy': 9, 'lapjv_lapjv': 12, 'hungarian': 12}
 
-Matrix size  [   8      16       32      64     128     256     512     1024    2048]
-     lapjv  [0.00007 0.00004 0.00005 0.00009 0.00035 0.00136 0.01013 0.06211 0.19604]
- hungarian  [0.00001 0.00001 0.00003 0.00013 0.00083 0.00472 0.03273 0.22168 1.69292]
-     scipy  [0.00031 0.00052 0.00135 0.00386 0.02158 0.09982 1.11753]
-munkres     [0.00029 0.00118 0.00517 0.03652 0.28729]
+8 x 8 ... cycle
+('Cycle ', '0 ')
+    lap_lapjv_cost    11.608
+    Hungarian_cost    11.608
+        Scipy_cost    11.608
+      Munkres_cost    11.608
+('Cycle ', '1 ')
+    lap_lapjv_cost    11.152
+    Hungarian_cost    11.152
+        Scipy_cost    11.152
+      Munkres_cost    11.152
+('Cycle ', '2 ')
+    lap_lapjv_cost    8.645
+    Hungarian_cost    8.645
+        Scipy_cost    8.645
+      Munkres_cost    8.645
+
+16 x 16 ... cycle
+('Cycle ', '0 ')
+    lap_lapjv_cost    27.935
+    Hungarian_cost    27.935
+        Scipy_cost    27.935
+      Munkres_cost    27.935
+('Cycle ', '1 ')
+    lap_lapjv_cost    27.262
+    Hungarian_cost    27.262
+        Scipy_cost    27.262
+      Munkres_cost    27.262
+('Cycle ', '2 ')
+    lap_lapjv_cost    24.914
+    Hungarian_cost    24.914
+        Scipy_cost    24.914
+      Munkres_cost    24.914
+
+32 x 32 ... cycle
+('Cycle ', '0 ')
+    lap_lapjv_cost    54.413
+    Hungarian_cost    54.413
+        Scipy_cost    54.413
+      Munkres_cost    54.413
+('Cycle ', '1 ')
+    lap_lapjv_cost    55.852
+    Hungarian_cost    55.852
+        Scipy_cost    55.852
+      Munkres_cost    55.852
+('Cycle ', '2 ')
+    lap_lapjv_cost    43.769
+    Hungarian_cost    43.769
+        Scipy_cost    43.769
+      Munkres_cost    43.769
+
+64 x 64 ... cycle
+('Cycle ', '0 ')
+    lap_lapjv_cost    90.240
+    Hungarian_cost    90.240
+        Scipy_cost    90.240
+      Munkres_cost    90.240
+('Cycle ', '1 ')
+    lap_lapjv_cost    100.814
+    Hungarian_cost    100.814
+        Scipy_cost    100.814
+      Munkres_cost    100.814
+('Cycle ', '2 ')
+    lap_lapjv_cost    109.488
+    Hungarian_cost    109.488
+        Scipy_cost    109.488
+      Munkres_cost    109.488
+
+128 x 128 ... cycle
+('Cycle ', '0 ')
+    lap_lapjv_cost    189.957
+    Hungarian_cost    189.957
+        Scipy_cost    189.957
+      Munkres_cost    189.957
+('Cycle ', '1 ')
+    lap_lapjv_cost    195.201
+    Hungarian_cost    195.201
+        Scipy_cost    195.201
+      Munkres_cost    195.201
+('Cycle ', '2 ')
+    lap_lapjv_cost    198.537
+    Hungarian_cost    198.537
+        Scipy_cost    198.537
+      Munkres_cost    198.537
+
+256 x 256 ... cycle
+('Cycle ', '0 ')
+    lap_lapjv_cost    448.987
+    Hungarian_cost    448.987
+        Scipy_cost    448.987
+('Cycle ', '1 ')
+    lap_lapjv_cost    447.997
+    Hungarian_cost    447.997
+        Scipy_cost    447.997
+('Cycle ', '2 ')
+    lap_lapjv_cost    447.124
+    Hungarian_cost    447.124
+        Scipy_cost    447.124
+
+512 x 512 ... cycle
+('Cycle ', '0 ')
+    lap_lapjv_cost    833.904
+    Hungarian_cost    833.904
+        Scipy_cost    833.904
+('Cycle ', '1 ')
+    lap_lapjv_cost    818.267
+    Hungarian_cost    818.267
+        Scipy_cost    818.267
+('Cycle ', '2 ')
+    lap_lapjv_cost    865.048
+    Hungarian_cost    865.048
+        Scipy_cost    865.048
+
+1024 x 1024 ... cycle
+('Cycle ', '0 ')
+    lap_lapjv_cost    1706.311
+    Hungarian_cost    1706.311
+('Cycle ', '1 ')
+    lap_lapjv_cost    1622.719
+    Hungarian_cost    1622.719
+('Cycle ', '2 ')
+    lap_lapjv_cost    1726.840
+    Hungarian_cost    1726.840
+
+2048 x 2048 ... cycle
+('Cycle ', '0 ')
+    lap_lapjv_cost    3367.320
+    Hungarian_cost    3367.320
+('Cycle ', '1 ')
+    lap_lapjv_cost    3393.564
+    Hungarian_cost    3393.564
+('Cycle ', '2 ')
+    lap_lapjv_cost    3451.197
+    Hungarian_cost    3451.197
+
+
+ Matrix_size       8      16      32      64     128     256     512    1024    2048
+   lap_lapjv  [0.00042 0.00005 0.00008 0.0001  0.00034 0.00124 0.00806 0.06974 0.36871]
+   hungarian  [0.00001 0.00002 0.00004 0.00012 0.00073 0.00515 0.03316 0.23165 1.80768]
+       scipy  [0.00108 0.00283 0.00605 0.01796 0.07887 0.5164  4.22893]
+     munkres  [0.00099 0.00871 0.06153 0.51439 5.06667]

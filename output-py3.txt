@@ -1,21 +1,171 @@
-Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 15, 'lap_lapjv': 15, 'lapjv_lapjv': 15}
+Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 12, 'lap_lapjv': 12, 'lapjv_lapjv': 12}
 
-8 x 8 ... cycle  0  1  2
-16 x 16 ... cycle  0  1  2
-32 x 32 ... cycle  0  1  2
-64 x 64 ... cycle  0  1  2
-128 x 128 ... cycle  0  1  2
-256 x 256 ... cycle  0  1  2
-512 x 512 ... cycle  0  1  2
-1024 x 1024 ... cycle  0  1  2
-2048 x 2048 ... cycle  0  1  2
-4096 x 4096 ... cycle  0  1  2
-8192 x 8192 ... cycle  0  1  2
-16384 x 16384 ... cycle  0  1  2
+8 x 8 ... cycle
+Cycle  0
+    lap_lapjv_cost    6.826
+  lapjv_lapjv_cost    6.826
+    Hungarian_cost    6.826
+        Scipy_cost    6.826
+      Munkres_cost    6.826
+Cycle  1
+    lap_lapjv_cost    14.525
+  lapjv_lapjv_cost    14.525
+    Hungarian_cost    14.525
+        Scipy_cost    14.525
+      Munkres_cost    14.525
+Cycle  2
+    lap_lapjv_cost    12.042
+  lapjv_lapjv_cost    12.042
+    Hungarian_cost    12.042
+        Scipy_cost    12.042
+      Munkres_cost    12.042
 
-Matrix_size       8      16      32       64      128       256       512     1024     2048     4096      8192     16384
- lap_lapjv   [0.00031  0.00004  0.00006  0.0001   0.0005   0.00181  0.01198  0.03803  0.18864  1.85925  11.50524   48.73192]
-lapjv_lapjv  [0.00006  0.00001  0.00002  0.00005  0.00042  0.00192  0.01294  0.04984  0.24718  1.31449   6.16797   24.03292]
- hungarian   [0.00001  0.00001  0.00003  0.00013  0.00077  0.00503  0.03432  0.23316  1.78575 15.18274 127.31623 1055.05817]
-     scipy   [0.00048  0.00051  0.00144  0.00493  0.02063  0.11216 1.01937]
-   munkres   [0.00039  0.00103  0.00633  0.04225  0.34005]
+16 x 16 ... cycle
+Cycle  0
+    lap_lapjv_cost    25.380
+  lapjv_lapjv_cost    25.380
+    Hungarian_cost    25.380
+        Scipy_cost    25.380
+      Munkres_cost    25.380
+Cycle  1
+    lap_lapjv_cost    21.472
+  lapjv_lapjv_cost    21.472
+    Hungarian_cost    21.472
+        Scipy_cost    21.472
+      Munkres_cost    21.472
+Cycle  2
+    lap_lapjv_cost    20.626
+  lapjv_lapjv_cost    20.626
+    Hungarian_cost    20.626
+        Scipy_cost    20.626
+      Munkres_cost    20.626
+
+32 x 32 ... cycle
+Cycle  0
+    lap_lapjv_cost    45.529
+  lapjv_lapjv_cost    45.529
+    Hungarian_cost    45.529
+        Scipy_cost    45.529
+      Munkres_cost    45.529
+Cycle  1
+    lap_lapjv_cost    55.409
+  lapjv_lapjv_cost    55.409
+    Hungarian_cost    55.409
+        Scipy_cost    55.409
+      Munkres_cost    55.409
+Cycle  2
+    lap_lapjv_cost    58.805
+  lapjv_lapjv_cost    58.805
+    Hungarian_cost    58.805
+        Scipy_cost    58.805
+      Munkres_cost    58.805
+
+64 x 64 ... cycle
+Cycle  0
+    lap_lapjv_cost    108.987
+  lapjv_lapjv_cost    108.987
+    Hungarian_cost    108.987
+        Scipy_cost    108.987
+      Munkres_cost    108.987
+Cycle  1
+    lap_lapjv_cost    108.566
+  lapjv_lapjv_cost    108.566
+    Hungarian_cost    108.566
+        Scipy_cost    108.566
+      Munkres_cost    108.566
+Cycle  2
+    lap_lapjv_cost    103.311
+  lapjv_lapjv_cost    103.311
+    Hungarian_cost    103.311
+        Scipy_cost    103.311
+      Munkres_cost    103.311
+
+128 x 128 ... cycle
+Cycle  0
+    lap_lapjv_cost    208.123
+  lapjv_lapjv_cost    208.123
+    Hungarian_cost    208.123
+        Scipy_cost    208.123
+      Munkres_cost    208.123
+Cycle  1
+    lap_lapjv_cost    174.360
+  lapjv_lapjv_cost    174.360
+    Hungarian_cost    174.360
+        Scipy_cost    174.360
+      Munkres_cost    174.360
+Cycle  2
+    lap_lapjv_cost    203.057
+  lapjv_lapjv_cost    203.057
+    Hungarian_cost    203.057
+        Scipy_cost    203.057
+      Munkres_cost    203.057
+
+256 x 256 ... cycle
+Cycle  0
+    lap_lapjv_cost    441.258
+  lapjv_lapjv_cost    441.258
+    Hungarian_cost    441.258
+        Scipy_cost    441.258
+Cycle  1
+    lap_lapjv_cost    408.009
+  lapjv_lapjv_cost    408.009
+    Hungarian_cost    408.009
+        Scipy_cost    408.009
+Cycle  2
+    lap_lapjv_cost    404.396
+  lapjv_lapjv_cost    404.396
+    Hungarian_cost    404.396
+        Scipy_cost    404.396
+
+512 x 512 ... cycle
+Cycle  0
+    lap_lapjv_cost    834.849
+  lapjv_lapjv_cost    834.849
+    Hungarian_cost    834.849
+        Scipy_cost    834.849
+Cycle  1
+    lap_lapjv_cost    944.849
+  lapjv_lapjv_cost    944.849
+    Hungarian_cost    944.849
+        Scipy_cost    944.849
+Cycle  2
+    lap_lapjv_cost    833.061
+  lapjv_lapjv_cost    833.061
+    Hungarian_cost    833.061
+        Scipy_cost    833.061
+
+1024 x 1024 ... cycle
+Cycle  0
+    lap_lapjv_cost    1732.465
+  lapjv_lapjv_cost    1732.465
+    Hungarian_cost    1732.465
+Cycle  1
+    lap_lapjv_cost    1724.209
+  lapjv_lapjv_cost    1724.209
+    Hungarian_cost    1724.209
+Cycle  2
+    lap_lapjv_cost    1737.838
+  lapjv_lapjv_cost    1737.838
+    Hungarian_cost    1737.838
+
+2048 x 2048 ... cycle
+Cycle  0
+    lap_lapjv_cost    3374.894
+  lapjv_lapjv_cost    3374.894
+    Hungarian_cost    3374.894
+Cycle  1
+    lap_lapjv_cost    3345.554
+  lapjv_lapjv_cost    3345.554
+    Hungarian_cost    3345.554
+Cycle  2
+    lap_lapjv_cost    3351.091
+  lapjv_lapjv_cost    3351.091
+    Hungarian_cost    3351.091
+
+
+ Matrix_size       8      16      32      64     128     256     512    1024    2048
+   lap_lapjv  [0.00007 0.00006 0.00008 0.00011 0.00028 0.00237 0.00736 0.04731 0.20403]
+ lapjv_lapjv  [0.00001 0.00001 0.00002 0.00005 0.00025 0.00262 0.00838 0.04876 0.24178]
+   hungarian  [0.00002 0.00002 0.00004 0.00015 0.00075 0.00516 0.03416 0.22103 1.70199]
+       scipy  [0.0011  0.00351 0.00679 0.0232  0.09304 0.57928 4.95848]
+     munkres  [0.00094 0.0104  0.0683  0.6992  6.02118]
