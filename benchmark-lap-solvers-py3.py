@@ -9,9 +9,9 @@
 # 3) hungarian - a wrapper to a C++ implementation Knuth's Hungarian algorithm provided by Harold Cooper
 #   https://github.com/Hrldcpr/Hungarian
 # 4) lap.lapjv - a wrapper to a C++ implementation of Jonker-Volgenant algorithm provided by Tomas Kazmar
-#   https://github.com/gatagat/lap)
+#   https://github.com/gatagat/lap
 # 5) lapjv.lapjv - a wrapper to a C++ implementation of Jonker-Volgenant algorithm re-written for Python 3 by source{d}
-#    (https://github.com/src-d/lapjv)
+#    https://github.com/src-d/lapjv
 #
 # They all formally have O(n^3) complexity, but their performance differs substantially based on
 # their implementation.
@@ -27,16 +27,19 @@ import lap
 import lapjv
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
+import inspect
+
+def func_name():
+   print(inspect.stack()[0][1])
 
 def main():
 
     # METHODS being benchmarked -- Add new METHOD[S] here
-    #methods = ["munkres", "scipy", "hungarian", "lap_lapjv", "lapjv_lapjv"]
     methods = ["lap_lapjv", "lapjv_lapjv", "hungarian", "scipy", "munkres"]
-    min = int(np.ceil(np.log2(args.min)))      # 2^min =  8x8 cost matrix
+    min = int(np.floor(np.log2(args.min)))      # 2^min =  8x8 cost matrix
     max = int(np.ceil(np.log2(args.max)))      # 2^max
-    ncyc = int(args.ncyc)                      # number of cycle 
-    
+    ncyc = int(args.ncyc)                      # number of cycle
+
     #ncyc = 3     # will run for ncyc and average the timing information
 
     # LIMITS - add limit for new METHOD[S] here
@@ -60,32 +63,37 @@ def main():
     run_methods = ["run_" + i for i in methods]
 
     base = 2                          # will build matrices of size base^n and solve them
-    
+
     #for matrices of size 2^{min} - 2^{max}
     for i in range(min,max):
         matrix_size = pow(base,i)
-        print(("\n" +  str(matrix_size) + " x " + str(matrix_size) + " ... cycle ") ,end=" ")  
+        #print(("\n" +  str(matrix_size) + " x " + str(matrix_size) + " ... cycle ") ,end=" ")
+        print(("\n" +  str(matrix_size) + " x " + str(matrix_size) + " ... cycle "))
         temp_methods = np.zeros(len(methods),float)
-        #Generate n_cyc random matrices and solve them using different methods 
+        #Generate n_cyc random matrices and solve them using different methods
         for j in range(ncyc):
-            cost_matrix = np.random.random((matrix_size, matrix_size))
-            print((str(j) + " "), end=" ")  
+            cost_matrix = matrix_size*np.random.random((matrix_size, matrix_size))
+            #print((str(j) + " "), end=" ")
+            print("Cycle ", (str(j) + " "))
+            #print("\n")
+            #print(cost_matrix)
             for method in range(len(methods)):
                 #print '%20s\t' %(methods[method])
                 if methods[method] == 'munkres' and i <= limit[methods[method]]:
-                    temp_methods[method] += run_munkres(cost_matrix)
+                    temp_methods[method] += run_munkres(cost_matrix, args.printcost)
                     #print temp_methods[method]
                 elif methods[method] == 'scipy' and i <= limit[methods[method]]:
-                    temp_methods[method] += run_scipy(cost_matrix)
+                    real_time = run_scipy(cost_matrix, args.printcost)
+                    temp_methods[method] += real_time
                     #print temp_methods[method]
                 elif methods[method] == 'hungarian' and i <= limit[methods[method]]:
-                    temp_methods[method] += run_hungarian(cost_matrix)
+                    temp_methods[method] += run_hungarian(cost_matrix, args.printcost)
                     #print temp_methods[method]
                 elif methods[method] == 'lap_lapjv' and i <= limit[methods[method]]:
-                    temp_methods[method] += run_lap_lapjv(cost_matrix)
+                    temp_methods[method] += run_lap_lapjv(cost_matrix, args.printcost)
                     #print temp_methods[method]
                 elif methods[method] == 'lapjv_lapjv' and i <= limit[methods[method]]:
-                    temp_methods[method] += run_lapjv_lapjv(cost_matrix)
+                    temp_methods[method] += run_lapjv_lapjv(cost_matrix, args.printcost)
                     #print temp_methods[method]
                     # If you want to benchmark a new METHOD, add another ELIF statement here
                 else:
@@ -100,81 +108,137 @@ def main():
     dimensions=t_methods[0][:,[0]]
     dimensions=dimensions.flatten()
     print("\n")
-    print("%10s "  % ("Matrix_size"), end=" ")
+    print("%12s "  % ("Matrix_size"), end=" ")
     np.set_printoptions(suppress=True,precision=5,linewidth=100)
     for i in range(len(dimensions)):
         print('%6d '  % (dimensions[i]), end=" ")
     print(" ")
-    
+
     np.set_printoptions(suppress=True,precision=5,linewidth=100)
     for method in range(len(methods)):
-        print('%10s '  % ( methods[method]), end=" ") 
+        print('%12s '  % ( methods[method]), end=" ")
         timings=t_methods[method][:,[1]]
         timings=timings.flatten()
         print(timings)
 
-    # generate a plot
-    fig, ax = plt.subplots()
-    
-    for method in range(len(methods)):
-        plt.scatter(t_methods[method][:,[0]],t_methods[method][:,[1]],label=methods[method])
-        plt.loglog(t_methods[method][:,[0]],t_methods[method][:,[1]],basex=2,basey=10)
+    # generate a plot (by default), unless 'no plot' option is selection
+    if args.noplot:
+        pass
+    else:
+        fig, ax = plt.subplots()
+        for method in range(len(methods)):
+            plt.scatter(t_methods[method][:,[0]],t_methods[method][:,[1]],label=methods[method])
+            plt.loglog(t_methods[method][:,[0]],t_methods[method][:,[1]],basex=2,basey=10)
 
-    plt.grid(True,which="both")
-    ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
-    plt.xlabel('Matrix dimension (2^n)', fontsize=18)
-    plt.ylabel('Real time to solution (seconds)',fontsize=18)
-    plt.title('Time to solve LAPs using different modules',fontsize=20)
-    plt.legend(fontsize=14)
-    plt.show()
+        plt.grid(True,which="both")
+        ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+        plt.xlabel('Matrix dimension (2^n)', fontsize=18)
+        plt.ylabel('Real time to solution (seconds)',fontsize=18)
+        plt.title('Time to solve LAPs using different modules',fontsize=20)
+        plt.legend(fontsize=14)
+        plt.show()
 
 # Solve LAP using different methods
 #LAPJV
-def run_lap_lapjv(matrix):
+def run_lap_lapjv(matrix, printlowestcost):
     t_start=time.time()
-    cost, x, y = lap.lapjv(matrix)
-    #print x
+    lowest_cost, row_ind, column_ind = lap.lapjv(matrix)
     t_end=time.time()
+
+    if printlowestcost:
+        #func_name()
+        print("%18s    %5.3f" % ("lap_lapjv_cost", lowest_cost))
+
+        if args.verbose:
+            '''
+            #print(" row_ind = ", row_ind)
+            #print(" col_ind = ", column_ind)
+            print(" lap_lapjv cost = ", cost)
+            '''
+            lowest_cost = 0.00
+            for i in range(len(row_ind)):
+                lowest_cost += matrix[i,row_ind[i]]
+                print(" ", lowest_cost)
+
+    del row_ind; del column_ind
     return t_end-t_start
 
 #LAPJV.LAPJV
-def run_lapjv_lapjv(matrix):
+def run_lapjv_lapjv(matrix, printlowestcost):
     t_start=time.time()
-    x, y, _ = lapjv.lapjv(matrix)
-    #print x
+    row_ind, column_ind, _ = lapjv.lapjv(matrix)
     t_end=time.time()
+    if printlowestcost:
+        #func_name()
+        lowest_cost=0.00
+        for i in range(len(row_ind)):
+            lowest_cost += matrix[i,row_ind[i]]
+            if args.verbose:
+                print(" ", lowest_cost)
+        print("%18s    %5.3f" % ("lapjv_lapjv_cost", lowest_cost))
+
+    del row_ind; del column_ind
     return t_end-t_start
 
 #Hungarian
-def run_hungarian(matrix):
+def run_hungarian(matrix, printlowestcost):
     t_start=time.time()
-    h, m = hungarian.lap(matrix)
-    #print h
+    hung_mat = np.copy(matrix)
+    row_ind, column_ind = hungarian.lap(hung_mat)
     t_end=time.time()
+
+    if printlowestcost:
+        #func_name()        #func_name()
+        lowest_cost=0.00
+        for i in range(len(row_ind)):
+            lowest_cost += matrix[i,row_ind[i]]
+            if args.verbose:
+                print(" ", lowest_cost)
+        print("%18s    %5.3f" % ("Hungarian_cost", lowest_cost))
+
+    del row_ind; del column_ind
     return t_end-t_start
 
 #Scipy-linear_sum_assignment
-def run_scipy(matrix):
+def run_scipy(matrix, printlowestcost):
     t_start=time.time()
-    s,n = linear_sum_assignment(matrix)
-    #print n
+    row_ind, column_ind = linear_sum_assignment(matrix)
     t_end=time.time()
+
+    if printlowestcost:
+        #func_name()
+        lowest_cost=0.00
+        lowest_cost= matrix[row_ind, column_ind].sum()
+        print("%18s    %5.3f" % ("Scipy_cost", lowest_cost))
+
+    del row_ind; del column_ind
     return t_end-t_start
 
 #Munkres
-def run_munkres(matrix):
+def run_munkres(matrix, printlowestcost):
     t_start=time.time()
-    u = munkres.Munkres()
-    perm = u.compute(matrix)
-    #print perm
+    munk_mat = np.copy(matrix)
+    m = munkres.Munkres()
+    indices = m.compute(matrix)
     t_end=time.time()
+
+    if printlowestcost:
+        #func_name()
+        columns = [x[1] for x in indices]
+        lowest_cost=0.00
+        for i in range(len(columns)):
+            lowest_cost += munk_mat[i,columns[i]]
+            if args.verbose:
+                print(" ", lowest_cost)
+        print("%18s    %5.3f" % ("Munkres_cost", lowest_cost))
+
+    del indices
     return t_end-t_start
 
 #NEW METHOD
 #Add function run_METHOD to get timing for method that method
 
 if __name__ == "__main__":
- 
     # Parse arguments and provide usage information
     description = """
     Benchmarks the performance of linear assignment problem solvers for random cost matrices
@@ -186,6 +250,12 @@ if __name__ == "__main__":
     2) plot of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
     """
     parser = argparse.ArgumentParser( description=description, formatter_class=argparse.RawDescriptionHelpFormatter,epilog=epilog)
+    parser.add_argument('-c', '--printcost', action='store_true', help='Print the minimum cost.\
+           The default is false, i.e. will not print the minmum cost')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Determines verbosity. \
+           The default is minimal printing, i.e. not verbose')
+    parser.add_argument('-np', '--noplot', action='store_true', help='Plot data using matplotlib. \
+           The default is true, i.e. generate plot')
     parser.add_argument('--min', metavar='min', nargs='?', type=int, default=8, \
            help='minimum dimension of cost matrix to solve. \
            The default is 8 (2^3 x 2^3)')
