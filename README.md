@@ -24,21 +24,27 @@ The repo contains the following:
 It's simple once you have installed the necessary packages.
 
 ```
-Usage: benchmark-lap-solvers.py [-h] [--min [min]] [--max [max]]
-                                [--ncyc [n_cycles]]
+Usage: benchmark-lap-solvers-py2.py [-h] [-c] [-v] [-np] [--min [min]]
+                                    [--max [max]] [--ncyc [ncyc]]
 
     Benchmarks the performance of linear assignment problem solvers for random cost matrices
-    of different sizes.
+    of different dimensions.
 
 
 optional arguments:
-  -h, --help         show this help message and exit
-  --min [min]        minimum dimension of cost matrix to solve. The default is 8
-                     (2^3 x 2^3)
-  --max [max]        maximum dimension of cost matrix to solve. The default is 4096
-                     (2^12 x 2^12)
-  --ncyc [n_cycles]  number of times to solve cost matrices and average their
-                     timing. The default is 3 cycles
+  -h, --help       show this help message and exit
+  -c, --printcost  Print the minimum cost. The default is false, i.e. will not
+                   print the minmum cost
+  -v, --verbose    Determines verbosity. The default is minimal printing, i.e.
+                   not verbose
+  -np, --noplot    Plot data using matplotlib. The default is true, i.e.
+                   generate plot
+  --min [min]      minimum dimension of cost matrix to solve. The default is 8
+                   (2^3 x 2^3)
+  --max [max]      maximum dimension of cost matrix to solve. The default is
+                   4096 (2^12 x 2^12)
+  --ncyc [ncyc]    number of times to solve cost matrices and average their
+                   timing. The default is 3 cycles
 
     The script  will produce the following:
     1) data of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
