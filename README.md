@@ -51,8 +51,14 @@ optional arguments:
     2) plot of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
 ```
 
-Eg: `./benchmark-lap-solvers.py` which is equivalent to
-    `./benchmark-lap-solvers.py --ncyc 3 --min 8 --max 4096`
+## Examples
+| command   |      execution    |       |
+|----------|:-------------:|: -------|
+| `./benchmark-lap-solvers-py3.py` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096` | default
+| `./benchmark-lap-solvers-py3.py --min 2 --max 512` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 2 --max 512` | default, except it looks at small matrices only |
+| `./benchmark-lap-solvers-py3.py -np` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096 -np` | default, except plotting is suppressed |
+| `./benchmark-lap-solvers-py3.py --printcost` | `./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096 --printcost` | default, except it prints lowest cost for each method |
+
 
 If you want to add other solvers to the list, it should be easy to figure out what parts to update in the scripts.
 
@@ -103,7 +109,7 @@ Matrix size  [   8      16       32      64     128     256     512     1024    
 
 ![alt text](images/figure-py2.png "Python2 benchmark test")
 
-If requested via the `--printcost` flag, it will also print the lowest cost predicted by implementation. This test ensures that the methods are making accurate assignments.
+If requested via the `--printcost` flag, it will also print the lowest cost predicted by each implementation. This test ensures that the methods are making consistent assignments.
 <pre>
 8 x 8 ... cycle
 ('Cycle ', '0 ')
