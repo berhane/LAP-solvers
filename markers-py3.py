@@ -74,7 +74,8 @@ def main():
         temp_methods = np.zeros(len(methods),float)
         #Generate n_cyc random matrices and solve them using different methods
         for j in range(ncyc):
-            cost_matrix = matrix_size*np.random.random((matrix_size, matrix_size))
+            #cost_matrix = matrix_size*np.random.random((matrix_size, matrix_size))
+            cost_matrix = np.random.random((matrix_size, matrix_size))
             #print((str(j) + " "), end=" ")
             print("Cycle ", (str(j) + " "))
             #print("\n")
@@ -191,7 +192,10 @@ def run_lapsolver(matrix, printlowestcost):
     if printlowestcost:
         #func_name()
         lowest_cost=0.00
-        lowest_cost= matrix[row_ind, column_ind].sum()
+        for i in range(len(row_ind)):
+            lowest_cost += matrix[i,row_ind[i]]
+            if args.verbose:
+                print(" ", lowest_cost)
         print("%18s    %5.3f" % ("lapsolver_cost", lowest_cost))
 
     del row_ind; del column_ind

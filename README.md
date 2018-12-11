@@ -1,17 +1,23 @@
 # Purpose
 
-The scripts benchmark the performance of four/five Python2/3 linear assignment problem solvers for random cost matrices of different sizes.  These solvers are:
+The scripts benchmark the performance of Python2/3 linear assignment problem solvers for random cost matrices of different sizes.  These solvers are:
 
 * **linear_sum_assignment** - a Python implementation of the Hungarian algorithm provided in SciPy
   * https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.linear_sum_assignment.html
 * **munkres** - a Python implementation of the Hungarian algorithm provided by Brian Clapper
-    * https://github.com/bmc/munkres
+  * https://github.com/bmc/munkres
 * **hungarian** - a wrapper to a C++ implementation Knuth's Hungarian algorithm provided by Harold Cooper
   * https://github.com/Hrldcpr/Hungarian
 * **lap.lapjv** - a wrapper to a C++ implementation of Jonker-Volgenant algorithm provided by Tomas Kazmar
   * https://github.com/gatagat/lap
-* **lapjv.lapjv** - a wrapper to a C++ implementation of Jonker-Volgenant algorithm re-written for Python 3 and optimized to take advantage of AVX2 instruction sets by Vadim Markovtsev at src{d}. Please see the [blog post here](https://blog.sourced.tech/post/lapjv/)
-    * https://github.com/src-d/lapjv  
+
+  In addition, these two solvers are added for Python3
+* **lapjv.lapjv** - a wrapper to a C++ implementation of Jonker-Volgenant algorithm re-written for Python 3 and optimized to take advantage of AVX2 instruction sets by Vadim Markovtsev at src{d}.
+  * Please see the [blog post here](https://blog.sourced.tech/post/lapjv/)
+  * https://github.com/src-d/lapjv  
+* **lapsolver** - implementation for dense matrices based on shortest path augmentation by Christoph Heindl.
+  * Please note that Christioph has also done a [benchmark of LAP solvers](https://github.com/cheind/py-lapsolver/tree/master/lapsolver/benchmarks)
+  * https://github.com/src-d/lapjv      
 
 They all formally have O(n<sup>3</sup>) complexity, but their performance differs substantially based on their implementation and the size of the matrix they are trying to solve. The purpose of this benchmarking exercise is to see which implementation performs best for a given matrix size. My interest is to use this information to improve the performance of [Arbalign](https://github.com/berhane/arbalign) and expand its use.
 
@@ -75,14 +81,15 @@ If you want to add other solvers to the list, it should be easy to figure out wh
   * `pip[2/3] install   hungarian`
 * `lap` module by Tomas Kozmar.
   * `pip[2/3] install lap`
-* `lapjv` module by source{d} for Python3
+* `lapjv` module by src{d} for Python3
   * `pip3 install lapjv`
-
+* `lapsolver` module by Christoph Heindl
+    * `pip3 install lapsolver`
 # Output
-The script  will produce output similar to this. **The output here corresponds to an average of three Python2/3 runs on a 2015 MacBook Air with Intel® Core™ i5-5250U Processor and 8GB RAM**
+The script  will produce output similar to this. **The output here corresponds to an average of three Python 2.7.15/3.7.1 runs on a 2013 MacPro with a 3.5 GHz Intel Xeon E5-1650v2 processor and 32GB of RAM**
 
 ## Python2
-* data of timing for LAP solving random cost matrices of sizes 2^{min} - 2^{max}
+* data of timing for LAP solving random cost matrices of sizes 2<sup>min</sup> - 2<sup>max</sup>
 
 <pre>
 Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 13, 'lap.lapjv': 13}
@@ -146,7 +153,7 @@ If requested via the `--printcost` flag, it will also print the minimum cost for
 
 ## Python3
 <pre>
-Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 15, 'lap_lapjv': 15, 'lapjv_lapjv': 15}
+Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 14, 'lap_lapjv': 14, 'lapjv_lapjv': 14, 'lapsolver': 14}
 
 8 x 8 ... cycle  0  1  2
 16 x 16 ... cycle  0  1  2
@@ -159,23 +166,22 @@ Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9
 2048 x 2048 ... cycle  0  1  2
 4096 x 4096 ... cycle  0  1  2
 8192 x 8192 ... cycle  0  1  2
-16384 x 16384 ... cycle  0  1  2
 
-Matrix_size       8      16      32       64      128       256       512     1024     2048     4096      8192     16384
- lap_lapjv   [0.00031  0.00004  0.00006  0.0001   0.0005   0.00181  0.01198  0.03803  0.18864  1.85925  11.50524   48.73192]
-lapjv_lapjv  [0.00006  0.00001  0.00002  0.00005  0.00042  0.00192  0.01294  0.04984  0.24718  1.31449   6.16797   24.03292]
- hungarian   [0.00001  0.00001  0.00003  0.00013  0.00077  0.00503  0.03432  0.23316  1.78575 15.18274 127.31623 1055.05817]
-     scipy   [0.00048  0.00051  0.00144  0.00493  0.02063  0.11216  1.01937]
-   munkres   [0.00039  0.00103  0.00633  0.04225  0.34005]
+Matrix_size       8      16      32      64     128     256     512    1024    2048    4096     8192
+  lap_lapjv  [0.00007 0.00006 0.00008 0.00015 0.00031 0.00208 0.00788 0.0609  0.24545  1.2339    9.28052]
+lapjv_lapjv  [0.00001 0.00001 0.00002 0.00016 0.00027 0.00201 0.00856 0.06035 0.33224  1.196     5.7255 ]
+  lapsolver  [0.00002 0.00003 0.00005 0.00016 0.00057 0.00284 0.01274 0.07896 0.43998  2.32273  12.94027]
+  hungarian  [0.00001 0.00002 0.00004 0.00015 0.00078 0.00475 0.03255 0.23945 1.79907 14.8607  128.75066]
+      scipy  [0.00110 0.00262 0.00727 0.02644 0.11247 0.59904 4.39246]
+    munkres  [0.00096 0.00799 0.07254 0.77326 7.24882]
 </pre>
 
 ![alt text](images/figure-py3.png "Python3 benchmark test")
 
 # Takeaways
 
-1. `scipy` and `munkres` are much slower than `hungarian`, `lap.lapjv`, and `lapjv.lapjv` for all matrix sizes
-2. `hungarian` performs better than `lap.lapjv` and `lapjv.lapjv` for matrices of size less than 16x16. For Anything larger than 256x256, `lap.lapjv` and `lapjv.lapjv` are about an order of magnitude faster than `hungarian`
+1. `scipy` and `munkres` are much slower than `hungarian`, `lapsolver`, `lap.lapjv`, and `lapjv.lapjv` for all matrix sizes
+2. `hungarian` performs well for smaller matrices. For anything larger than 256x256, `lapsolver`, `lap.lapjv` and `lapjv.lapjv` are about an order of magnitude faster than `hungarian`
 3. `lap.lapjv` is am implementation intended to solve dense matrices. Its sparse matrix solver analog named `lap.lapmod` is more efficient for larger sparse matrices. Both are implemented in the `lap` module.
 4. `lapjv.lapjv` has the best performance virtually for all matrix sizes.
-5. There is definitely a need to check that all these methods reach the same solutions/assigments.
-5. For the purposes of improving [Arbalign](https://github.com/berhane/arbalign), `hungarian` remains a good choice for most molecular systems I'm interested in which don't have more than 100x100 distance matrices the same type to solve. However, if the tool is to be applied to larger molecules such as proteins and DNA, it would be worthwhile to use `lapjv.lapjv`, `lap.lapjv` or `lap.lapmod`
+5. For the purposes of improving [Arbalign](https://github.com/berhane/arbalign), `hungarian` remains a good choice for most molecular systems I'm interested in which don't have more than 100x100 distance matrices the same type to solve. However, if the tool is to be applied to larger molecules such as proteins and DNA, it would be worthwhile to use `lapjv.lapjv`, `lapsolver`, `lap.lapjv` or `lap.lapmod`
