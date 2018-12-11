@@ -103,6 +103,41 @@ Matrix size  [   8      16       32      64     128     256     512     1024    
 
 ![alt text](images/figure-py2.png "Python2 benchmark test")
 
+If requested via the `--printcost` flag, it will also print the lowest cost predicted by implementation. This test ensures that the methods are making accurate assignments.
+<pre>
+8 x 8 ... cycle
+('Cycle ', '0 ')
+    lap_lapjv_cost    10.649
+    Hungarian_cost    10.649
+        Scipy_cost    10.649
+      Munkres_cost    10.649
+('Cycle ', '1 ')
+    lap_lapjv_cost    10.399
+    Hungarian_cost    10.399
+        Scipy_cost    10.399
+      Munkres_cost    10.399
+('Cycle ', '2 ')
+    lap_lapjv_cost    7.654
+    Hungarian_cost    7.654
+        Scipy_cost    7.654
+      Munkres_cost    7.654
+.
+,
+,
+2048 x 2048 ... cycle
+('Cycle ', '0 ')
+    lap_lapjv_cost    3388.642
+    Hungarian_cost    3388.642
+('Cycle ', '1 ')
+    lap_lapjv_cost    3269.750
+    Hungarian_cost    3269.750
+('Cycle ', '2 ')
+    lap_lapjv_cost    3424.101
+    Hungarian_cost    3424.101      
+</pre>
+
+
+
 ## Python3
 <pre>
 Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 15, 'lap_lapjv': 15, 'lapjv_lapjv': 15}
