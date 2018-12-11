@@ -72,7 +72,8 @@ def main():
         temp_methods = np.zeros(len(methods),float)
         #Generate n_cyc random matrices and solve them using different methods
         for j in range(ncyc):
-            cost_matrix = matrix_size*np.random.random((matrix_size, matrix_size))
+            #cost_matrix = matrix_size*np.random.random((matrix_size, matrix_size))
+            cost_matrix = np.random.random((matrix_size, matrix_size))
             #print((str(j) + " "), end=" ")
             print("Cycle ", (str(j) + " "))
             #print("\n")
