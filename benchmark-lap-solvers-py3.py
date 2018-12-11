@@ -25,6 +25,7 @@ from scipy.optimize import curve_fit
 import hungarian
 import lap
 import lapjv
+from lapsolver import solve_dense
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 import inspect
@@ -35,7 +36,7 @@ def func_name():
 def main():
 
     # METHODS being benchmarked -- Add new METHOD[S] here
-    methods = ["lap_lapjv", "lapjv_lapjv", "hungarian", "scipy", "munkres"]
+    methods = ["lap_lapjv", "lapjv_lapjv", "lapsolver", "hungarian", "scipy", "munkres"]
     min = int(np.floor(np.log2(args.min)))      # 2^min =  8x8 cost matrix
     max = int(np.ceil(np.log2(args.max)))      # 2^max
     ncyc = int(args.ncyc)                      # number of cycle
@@ -53,6 +54,7 @@ def main():
     limit['hungarian'] = max
     limit['lap_lapjv'] = max
     limit['lapjv_lapjv'] = max
+    limit['lapsolver'] = max
     print("Solving matrices of sizes up to limit 2^{n} where n is " + str(limit))
 
     # arrays to store data
@@ -96,6 +98,9 @@ def main():
                 elif methods[method] == 'lapjv_lapjv' and i <= limit[methods[method]]:
                     temp_methods[method] += run_lapjv_lapjv(cost_matrix, args.printcost)
                     #print temp_methods[method]
+                elif methods[method] == 'lapsolver' and i <= limit[methods[method]]:
+                    temp_methods[method] += run_lapsolver(cost_matrix, args.printcost)
+                    #print temp_methods[method]
                     # If you want to benchmark a new METHOD, add another ELIF statement here
                 else:
                     pass
@@ -126,9 +131,12 @@ def main():
     if args.noplot:
         pass
     else:
+        markers=[]
+        markers = ['o', 'v', 's', 'D', 'P', '+', '*','0', '1', '2'] 
+        marker_size=[50]
         fig, ax = plt.subplots()
         for method in range(len(methods)):
-            plt.scatter(t_methods[method][:,[0]],t_methods[method][:,[1]],label=methods[method])
+            plt.scatter(t_methods[method][:,[0]],t_methods[method][:,[1]],s=marker_size,label=methods[method],marker=markers[method])
             plt.loglog(t_methods[method][:,[0]],t_methods[method][:,[1]],basex=2,basey=10)
 
         plt.grid(True,which="both")
@@ -151,11 +159,6 @@ def run_lap_lapjv(matrix, printlowestcost):
         print("%18s    %5.3f" % ("lap_lapjv_cost", lowest_cost))
 
         if args.verbose:
-            '''
-            #print(" row_ind = ", row_ind)
-            #print(" col_ind = ", column_ind)
-            print(" lap_lapjv cost = ", cost)
-            '''
             lowest_cost = 0.00
             for i in range(len(row_ind)):
                 lowest_cost += matrix[i,row_ind[i]]
@@ -177,6 +180,23 @@ def run_lapjv_lapjv(matrix, printlowestcost):
             if args.verbose:
                 print(" ", lowest_cost)
         print("%18s    %5.3f" % ("lapjv_lapjv_cost", lowest_cost))
+
+    del row_ind; del column_ind
+    return t_end-t_start
+
+#LAPSOLVER
+def run_lapsolver(matrix, printlowestcost):
+    t_start=time.time()
+    row_ind, column_ind = solve_dense(matrix)
+    t_end=time.time()
+    if printlowestcost:
+        #func_name()
+        lowest_cost=0.00
+        for i in range(len(row_ind)):
+            lowest_cost += matrix[i,row_ind[i]]
+            if args.verbose:
+                print(" ", lowest_cost)
+        print("%18s    %5.3f" % ("lapsolver_cost", lowest_cost))
 
     del row_ind; del column_ind
     return t_end-t_start
@@ -252,7 +272,7 @@ if __name__ == "__main__":
     """
     parser = argparse.ArgumentParser( description=description, formatter_class=argparse.RawDescriptionHelpFormatter,epilog=epilog)
     parser.add_argument('-c', '--printcost', action='store_true', help='Print the minimum cost.\
-           The default is false, i.e. will not print the minmum cost')
+           The default is false, i.e. will not print the minimum cost')
     parser.add_argument('-v', '--verbose', action='store_true', help='Determines verbosity. \
            The default is minimal printing, i.e. not verbose')
     parser.add_argument('-np', '--noplot', action='store_true', help='Plot data using matplotlib. \
