@@ -3,18 +3,21 @@
 # Tests the performance of linear assignment problem solvers for cost matrices
 # of different sizes.  In particular, we'll be comparing
 # 1) linear_sum_assignment - version provided in scipy
-#    https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.linear_sum_assignment.html
+#    https://github.com/scipy/scipy
 # 2) munkres - a Python implementation provided by Brian Clapper
 #   https://github.com/bmc/munkres
-# 3) hungarian - a wrapper to a C++ implementation Knuth's Hungarian algorithm provided by Harold Cooper
+# 3) hungarian - a wrapper to a C++ implementation Knuth's Hungarian algorithm
+#    provided by Harold Cooper
 #   https://github.com/Hrldcpr/Hungarian
-# 4) lap.lapjv - a wrapper to a C++ implementation of Jonker-Volgenant algorithm provided by Tomas Kazmar
+# 4) lap.lapjv - a wrapper to a C++ implementation of Jonker-Volgenant
+#    algorithm provided by Tomas Kazmar
 #   https://github.com/gatagat/lap
-# 5) lapjv.lapjv - a wrapper to a C++ implementation of Jonker-Volgenant algorithm re-written for Python 3 by source{d}
-#    https://github.com/src-d/lapjv
+# 5) lapjv.lapjv - a wrapper to a C++ implementation of Jonker-Volgenant
+#   algorithm re-written for Python 3 by source{d}
+#   https://github.com/src-d/lapjv
 #
-# They all formally have O(n^3) complexity, but their performance differs substantially based on
-# their implementation.
+# They all formally have O(n^3) complexity, but their performance
+# differs substantially based on their implementation.
 
 import time
 import argparse
@@ -36,7 +39,8 @@ def func_name():
 def main():
 
     # METHODS being benchmarked -- Add new METHOD[S] here
-    methods = ["lap_lapjv", "lapjv_lapjv", "lapsolver", "hungarian", "scipy", "munkres"]
+    methods = ["lap_lapjv", "lapjv_lapjv", "lapsolver", "hungarian", \
+     "scipy", "munkres"]
     min = int(np.floor(np.log2(args.min)))      # 2^min =  8x8 cost matrix
     max = int(np.ceil(np.log2(args.max)))      # 2^max
     ncyc = int(args.ncyc)                      # number of cycle
@@ -45,8 +49,9 @@ def main():
 
     # LIMITS - add limit for new METHOD[S] here
     # The size of the matrix to be solved is limited to 2^{limit['method']}
-    # for each method to ensure quick termination of the benchmarking exercise.
-    # unkres and Scipy are considerably slower, making it necessary to limit them to smaller
+    # for each method to ensure quick termination of the benchmarking
+    # exercise. Munkres and Scipy are considerably slower, making it
+    # necessary to limit them to smaller
     # matrices
     limit = {}
     limit['munkres'] = 7
@@ -55,7 +60,7 @@ def main():
     limit['lap_lapjv'] = max
     limit['lapjv_lapjv'] = max
     limit['lapsolver'] = max
-    print("Solving matrices of sizes up to limit 2^{n} where n is " + str(limit))
+    print("Solving matrices of sizes up to 2^{n} where n is " + str(limit))
 
     # arrays to store data
     t_methods = ["t_" + i for i in methods]
@@ -64,13 +69,14 @@ def main():
     label_methods = ["label_" + i for i in methods]
     run_methods = ["run_" + i for i in methods]
 
-    base = 2                          # will build matrices of size base^n and solve them
+    base = 2               # will build matrices of size base^n and solve them
 
     #for matrices of size 2^{min} - 2^{max}
     for i in range(min,max):
         matrix_size = pow(base,i)
         #print(("\n" +  str(matrix_size) + " x " + str(matrix_size) + " ... cycle ") ,end=" ")
-        print(("\n" +  str(matrix_size) + " x " + str(matrix_size) + " ... cycle "))
+        print(("\n" +  str(matrix_size) + " x " + str(matrix_size) \
+        + " ... cycle "))
         temp_methods = np.zeros(len(methods),float)
         #Generate n_cyc random matrices and solve them using different methods
         for j in range(ncyc):
@@ -107,7 +113,8 @@ def main():
         # average the timing information from n_cyc cycles
         for method in range(len(methods)):
             if temp_methods[method] != 0:   # to make sure there is timing information
-                t_methods[method] = np.append(t_methods[method], np.array([[matrix_size, temp_methods[method]/ncyc]]), axis=0)
+                t_methods[method] = np.append(t_methods[method], \
+                np.array([[matrix_size, temp_methods[method]/ncyc]]), axis=0)
 
     # print timing information to screen
     dimensions=t_methods[0][:,[0]]
@@ -131,12 +138,14 @@ def main():
         pass
     else:
         markers=[]
-        markers = ['o', 'v', 's', 'D', 'P', '+', '*','0', '1', '2'] 
+        markers = ['o', 'v', 's', 'D', 'P', '+', '*','0', '1', '2']
         marker_size=[50]
         fig, ax = plt.subplots()
         for method in range(len(methods)):
-            plt.scatter(t_methods[method][:,[0]],t_methods[method][:,[1]],s=marker_size,label=methods[method],marker=markers[method])
-            plt.loglog(t_methods[method][:,[0]],t_methods[method][:,[1]],basex=2,basey=10)
+            plt.scatter(t_methods[method][:,[0]],t_methods[method][:,[1]], \
+            s=marker_size,label=methods[method],marker=markers[method])
+            plt.loglog(t_methods[method][:,[0]],t_methods[method][:,[1]], \
+            basex=2,basey=10)
 
         plt.grid(True,which="both")
         ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
@@ -258,13 +267,15 @@ def run_munkres(matrix, printlowestcost):
 if __name__ == "__main__":
     # Parse arguments and provide usage information
     description = """
-    Benchmarks the performance of linear assignment problem solvers for random cost matrices
-    of different dimensions.
+    Benchmarks the performance of linear assignment problem solvers for
+    random cost matrices of different dimensions.
     """
     epilog = """
     The script  will produce the following:
-    1) data of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
-    2) plot of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
+    1) data of timing for LAP solving random cost matrices of
+    dimensions 2^{min} - 2^{max}
+    2) plot of timing for LAP solving random cost matrices of 
+    dimensions 2^{min} - 2^{max}
     """
     parser = argparse.ArgumentParser( description=description, formatter_class=argparse.RawDescriptionHelpFormatter,epilog=epilog)
     parser.add_argument('-c', '--printcost', action='store_true', help='Print the minimum cost.\
