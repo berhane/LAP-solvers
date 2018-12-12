@@ -3,7 +3,7 @@
 The scripts benchmark the performance of Python2/3 linear assignment problem solvers for random cost matrices of different sizes.  These solvers are:
 
 * **linear_sum_assignment** - a Python implementation of the Hungarian algorithm provided in SciPy
-  * https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.linear_sum_assignment.html
+  * https://github.com/scipy/scipy/
 * **munkres** - a Python implementation of the Hungarian algorithm provided by Brian Clapper
   * https://github.com/bmc/munkres
 * **hungarian** - a wrapper to a C++ implementation Knuth's Hungarian algorithm provided by Harold Cooper
@@ -17,34 +17,47 @@ The scripts benchmark the performance of Python2/3 linear assignment problem sol
   * https://github.com/src-d/lapjv  
 * **lapsolver** - implementation for dense matrices based on shortest path augmentation by Christoph Heindl.
   * Please note that Christioph has also done a [benchmark of LAP solvers](https://github.com/cheind/py-lapsolver/tree/master/lapsolver/benchmarks)
-  * https://github.com/src-d/lapjv      
+  * https://github.com/cheind/py-lapsolver      
 
-They all formally have O(n<sup>3</sup>) complexity, but their performance differs substantially based on their implementation and the size of the matrix they are trying to solve. The purpose of this benchmarking exercise is to see which implementation performs best for a given matrix size. My interest is to use this information to improve the performance of [Arbalign](https://github.com/berhane/arbalign) and expand its use.
+They all formally have O(n<sup>3</sup>) complexity, but their performance differs substantially based on their implementation and the size of the matrix they are trying to solve. The solvers can be classified based on some unique characteristics.
+
+|  Module                             | Python or C/C++/Cython  | Algorithm     |
+|-------------------------------------|:-----------------------:|:--------------|
+|scipy.optimize.linear_sum_assignment |          Python         | Hungarian     |
+|munkres.Munkres                      |          Python         | Hungarian     |
+|hungarian.lap                        |          C++            | Hungarian     |
+|lap.lapjv                            |          C++            | Jonker-Volgenant     |
+|lapjv.lapjv                          |          C++            | Jonker-Volgenant     |
+|lapsolver.solve_dense                |          C++            | shortest augmenting path     |
+
+The purpose of this benchmarking exercise is to see which implementation performs best for a given matrix size. My interest is to use this information to improve the performance of [Arbalign](https://github.com/berhane/arbalign) and expand its use.
 
 # Contents
 The repo contains the following:
 * `benchmark-lap-solvers-py2.py` - a Python2 script comparing the first four implementations
-* `benchmark-lap-solvers-py3.py` - a Python3 script comparing all five four implementations
+* `benchmark-lap-solvers-py3.py` - a Python3 script comparing all six implementations
 
 # Usage
 It's simple once you have installed the necessary packages.
 
 ```
-Usage: benchmark-lap-solvers-py2.py [-h] [-c] [-v] [-np] [--min [min]]
+Usage: benchmark-lap-solvers-py3.py [-h] [-c] [-v] [-np] [-sp] [--min [min]]
                                     [--max [max]] [--ncyc [ncyc]]
 
-    Benchmarks the performance of linear assignment problem solvers for random cost matrices
-    of different dimensions.
+    Benchmarks the performance of linear assignment problem solvers for
+    random cost matrices of different dimensions.
 
 
 optional arguments:
   -h, --help       show this help message and exit
   -c, --printcost  Print the minimum cost. The default is false, i.e. will not
-                   print the minmum cost
+                   print the minimum cost
   -v, --verbose    Determines verbosity. The default is minimal printing, i.e.
                    not verbose
-  -np, --noplot    Plot data using matplotlib. The default is true, i.e.
-                   generate plot
+  -np, --noplot    Do not plot data using matplotlib. The default is to save
+                   plot of the data in PNG format, but not open the plot GUI
+  -sp, --showplot  Show plot of data using matplotlib. The default is to save
+                   plot of the data in PNG format, but not open the plot GUI
   --min [min]      minimum dimension of cost matrix to solve. The default is 8
                    (2^3 x 2^3)
   --max [max]      maximum dimension of cost matrix to solve. The default is
@@ -53,8 +66,10 @@ optional arguments:
                    timing. The default is 3 cycles
 
     The script  will produce the following:
-    1) data of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
-    2) plot of timing for LAP solving random cost matrices of dimensions 2^{min} - 2^{max}
+    1) data of timing for LAP solving random cost matrices of
+    dimensions 2^{min} - 2^{max}
+    2) plot of timing for LAP solving random cost matrices of
+    dimensions 2^{min} - 2^{max}
 ```
 <!--
 ## Examples
@@ -85,11 +100,14 @@ If you want to add other solvers to the list, it should be easy to figure out wh
   * `pip3 install lapjv`
 * `lapsolver` module by Christoph Heindl
     * `pip3 install lapsolver`
+
 # Output
-The script  will produce output similar to this. **The output here corresponds to an average of three Python 2.7.15/3.7.1 runs on a 2013 MacPro with a 3.5 GHz Intel Xeon E5-1650v2 processor and 32GB of RAM**
+The script will produce output similar to what's shown below. Some things to note are:
+* The timings here corresponds to an average of three Python 2.7.15/3.7.1 runs on a 2013 MacPro with a 3.5 GHz Intel Xeon E5-1650v2 processor and 32GB of RAM
+* The random matrices are filled with floating point numbers ranging from 0 to the size (# of rows or columns) of the matrix. They are generated using numpy: `cost_matrix = matrix_size * np.random.random((matrix_size, matrix_size))`
 
 ## Python2
-* data of timing for LAP solving random cost matrices of sizes 2<sup>min</sup> - 2<sup>max</sup>
+* Data of timing for solving LAP of random cost matrices of sizes 2<sup>min</sup> x 2<sup>min</sup>  to 2<sup>max</sup> x 2<sup>max</sup>.
 
 <pre>
 Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 13, 'lap.lapjv': 13}
@@ -110,9 +128,11 @@ Matrix size  [   8      16       32      64     128     256     512     1024    
  hungarian  [0.00001 0.00001 0.00002 0.00011 0.00066 0.00472 0.03157 0.21561 1.71368 14.11281]
      scipy  [0.0004  0.00044 0.00086 0.00353 0.01809 0.10358 1.01071]
    munkres  [0.00033 0.00091 0.00445 0.03216 0.25957]
+
+   Figure saved to file timings-LAPs-py2-8-8192.png
 </pre>
 
-* plot of timing for LAP solving random cost matrices of sizes 2<sup>min</sup> - 2<sup>max</sup>
+* plot of timing for LAP solving random cost matrices of sizes 2<sup>min</sup> x 2<sup>min</sup>  to 2<sup>max</sup> x 2<sup>max</sup>, where *min* and *max* are limited to smaller numbers for `munkres` and `scipy` in the interest of time.
 
 ![alt text](images/figure-py2.png "Python2 benchmark test")
 
@@ -155,25 +175,29 @@ If requested via the `--printcost` flag, it will also print the minimum cost for
 <pre>
 Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 14, 'lap_lapjv': 14, 'lapjv_lapjv': 14, 'lapsolver': 14}
 
-8 x 8 ... cycle  0  1  2
-16 x 16 ... cycle  0  1  2
-32 x 32 ... cycle  0  1  2
-64 x 64 ... cycle  0  1  2
-128 x 128 ... cycle  0  1  2
-256 x 256 ... cycle  0  1  2
-512 x 512 ... cycle  0  1  2
-1024 x 1024 ... cycle  0  1  2
-2048 x 2048 ... cycle  0  1  2
-4096 x 4096 ... cycle  0  1  2
-8192 x 8192 ... cycle  0  1  2
+8 x 8 ... cycle
+Cycle  0
+    lap_lapjv_cost    7.976
+  lapjv_lapjv_cost    7.976
+    lapsolver_cost    7.976
+    Hungarian_cost    7.976
+        Scipy_cost    7.976
+      Munkres_cost    7.976
 
-Matrix_size       8      16      32      64     128     256     512    1024    2048    4096     8192
-  lap_lapjv  [0.00007 0.00006 0.00008 0.00015 0.00031 0.00208 0.00788 0.0609  0.24545  1.2339    9.28052]
-lapjv_lapjv  [0.00001 0.00001 0.00002 0.00016 0.00027 0.00201 0.00856 0.06035 0.33224  1.196     5.7255 ]
-  lapsolver  [0.00002 0.00003 0.00005 0.00016 0.00057 0.00284 0.01274 0.07896 0.43998  2.32273  12.94027]
-  hungarian  [0.00001 0.00002 0.00004 0.00015 0.00078 0.00475 0.03255 0.23945 1.79907 14.8607  128.75066]
-      scipy  [0.00110 0.00262 0.00727 0.02644 0.11247 0.59904 4.39246]
-    munkres  [0.00096 0.00799 0.07254 0.77326 7.24882]
+.
+.
+.
+
+
+Matrix_size       8        16      32       64      128      256      512     1024     2048       4096       8192     16384
+  lap_lapjv  [ 0.0003   0.00005  0.00009  0.00013  0.00037  0.00224  0.00581  0.0702   0.24894  1.47379    9.61785   63.22643]
+lapjv_lapjv  [ 0.00006  0.00001  0.00003  0.00006  0.00031  0.00231  0.00625  0.0755   0.29286  1.24798    5.49919   23.89383]
+  lapsolver  [ 0.00003  0.00003  0.00007  0.00018  0.00064  0.00262  0.01298  0.07445  0.33587  2.33581   11.88771   67.10397]
+  hungarian  [ 0.00001  0.00002  0.00004  0.00013  0.00085  0.00503  0.03316  0.22956  1.63596 15.02935  127.19425 1025.16906]
+      scipy  [ 0.00088  0.00208  0.00881  0.02201  0.10714  0.58886  4.38091]
+    munkres  [ 0.00075  0.00596  0.09011  0.66533  7.30088]
+
+  Figure saved to file timings-LAPs-py3-8-16384.png
 </pre>
 
 ![alt text](images/figure-py3.png "Python3 benchmark test")
