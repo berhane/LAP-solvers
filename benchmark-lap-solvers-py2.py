@@ -137,6 +137,7 @@ def main():
         fig_filename = "timing-LAPs-py2-" + \
             str(pow(2, min)) + "-" + str(pow(2, max)) + ".png"
         print("Figure saved to file %18s" % (fig_filename))
+        fig.set_size_inches(11, 8.5)
         plt.savefig(fig_filename, bbox_inches='tight', dpi=150)
         if args.showplot:
             plt.show()
@@ -148,20 +149,19 @@ def main():
 def run_lap_lapjv(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
-    print(method_name)
+    print(" %s" % ( method_name ) )
     
     t_start = time.time()
     cost, row_ind, column_ind = lap.lapjv(matrix)
     t_end = time.time()
 
     if printlowestcost:
-        # func_name()
         if args.verbose:
             lowest_cost = 0.00
             for i in range(len(row_ind)):
                 lowest_cost += matrix[i, row_ind[i]]
-                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", cost))
+                print("%18s %6d %5.3f" % ("      ", i ,lowest_cost))
+        print("  %12s %s %5.3f" % (method_name, "minimum cost", cost))
 
     del row_ind
     del column_ind
@@ -173,7 +173,7 @@ def run_lap_lapjv(matrix, printlowestcost):
 def run_lapjv_lapjv(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
-    print(method_name)
+    print(" %s" % ( method_name ) )
     
     t_start = time.time()
     row_ind, column_ind, _ = lapjv.lapjv(matrix)
@@ -183,8 +183,8 @@ def run_lapjv_lapjv(matrix, printlowestcost):
         for i in range(len(row_ind)):
             lowest_cost += matrix[i, row_ind[i]]
             if args.verbose:
-                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
+                print("%18s %6d %5.3f" % ("      ", i ,lowest_cost))
+        print("  %12s %s %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del row_ind
     del column_ind
@@ -196,7 +196,7 @@ def run_lapjv_lapjv(matrix, printlowestcost):
 def run_hungarian(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
-    print(method_name)
+    print(" %s" % ( method_name ) )
     
     t_start = time.time()
     hung_mat = np.copy(matrix)
@@ -208,8 +208,8 @@ def run_hungarian(matrix, printlowestcost):
         for i in range(len(row_ind)):
             lowest_cost += matrix[i, row_ind[i]]
             if args.verbose:
-                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
+                print("%18s %6d %5.3f" % ("      ", i ,lowest_cost))
+        print("  %12s %s %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del row_ind
     del column_ind
@@ -221,7 +221,7 @@ def run_hungarian(matrix, printlowestcost):
 def run_scipy(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
-    print(method_name)
+    print(" %s" % ( method_name ) )
     
     t_start = time.time()
     row_ind, column_ind = linear_sum_assignment(matrix)
@@ -230,7 +230,7 @@ def run_scipy(matrix, printlowestcost):
     if printlowestcost:
         lowest_cost = 0.00
         lowest_cost = matrix[row_ind, column_ind].sum()
-        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
+        print("  %12s %s %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del row_ind
     del column_ind
@@ -242,7 +242,7 @@ def run_scipy(matrix, printlowestcost):
 def run_munkres(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
-    print(method_name)
+    print(" %s" % ( method_name ) )
     
     t_start = time.time()
     munk_mat = np.copy(matrix)
@@ -256,8 +256,8 @@ def run_munkres(matrix, printlowestcost):
         for i in range(len(columns)):
             lowest_cost += munk_mat[i, columns[i]]
             if args.verbose:
-                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
+                print("%18s %6d %5.3f" % ("      ", i ,lowest_cost))
+        print("  %12s %s %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del indices
     return t_end-t_start
