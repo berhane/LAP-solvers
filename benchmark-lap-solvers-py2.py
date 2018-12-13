@@ -24,19 +24,14 @@ import hungarian
 import lap
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
-'''
 import inspect
-def func_name():
-   print(inspect.stack()[0][1])
-'''
-
 
 def main():
 
     # METHODS being benchmarked -- Add new METHOD[S] here
     methods = ["lap_lapjv", "hungarian", "scipy", "munkres"]
     min = int(np.floor(np.log2(args.min)))      # 2^min =  8x8 cost matrix
-    max = int(np.ceil(np.log2(args.max))+1)      # 2^max
+    max = int(np.ceil(np.log2(args.max)))      # 2^max
     ncyc = int(args.ncyc)                      # number of cycle
 
     # LIMITS - add limit for new METHOD[S] here
@@ -151,6 +146,10 @@ def main():
 
 
 def run_lap_lapjv(matrix, printlowestcost):
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(method_name)
+    
     t_start = time.time()
     cost, row_ind, column_ind = lap.lapjv(matrix)
     t_end = time.time()
@@ -161,8 +160,8 @@ def run_lap_lapjv(matrix, printlowestcost):
             lowest_cost = 0.00
             for i in range(len(row_ind)):
                 lowest_cost += matrix[i, row_ind[i]]
-                print("%12s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-        print("%18s    %5.3f" % ("lap_lapjv_cost", cost))
+                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
+        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", cost))
 
     del row_ind
     del column_ind
@@ -172,18 +171,20 @@ def run_lap_lapjv(matrix, printlowestcost):
 
 
 def run_lapjv_lapjv(matrix, printlowestcost):
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(method_name)
+    
     t_start = time.time()
     row_ind, column_ind, _ = lapjv.lapjv(matrix)
     t_end = time.time()
     if printlowestcost:
-        # func_name()
         lowest_cost = 0.00
         for i in range(len(row_ind)):
             lowest_cost += matrix[i, row_ind[i]]
             if args.verbose:
-                print("%12s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-        print("%18s    %5.3f" % ("lapjv_lapjv_cost", lowest_cost))
-        #print("%27s    %5.3f   %10s  %5.3f" % ("lapjv_lapjv minimum cost", lowest_cost, "timing",  t_end-t_start))
+                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
+        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del row_ind
     del column_ind
@@ -193,20 +194,22 @@ def run_lapjv_lapjv(matrix, printlowestcost):
 
 
 def run_hungarian(matrix, printlowestcost):
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(method_name)
+    
     t_start = time.time()
     hung_mat = np.copy(matrix)
     row_ind, column_ind = hungarian.lap(hung_mat)
     t_end = time.time()
 
     if printlowestcost:
-        # func_name()        #func_name()
         lowest_cost = 0.00
         for i in range(len(row_ind)):
             lowest_cost += matrix[i, row_ind[i]]
             if args.verbose:
-                print("%12s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-        print("%18s    %5.3f" % ("Hungarian_cost", lowest_cost))
-        #print("%27s    %5.3f   %10s  %3.6f" % ("lapjv_lapjv minimum cost", lowest_cost, "timing",  t_end-t_start))
+                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
+        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del row_ind
     del column_ind
@@ -216,15 +219,18 @@ def run_hungarian(matrix, printlowestcost):
 
 
 def run_scipy(matrix, printlowestcost):
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(method_name)
+    
     t_start = time.time()
     row_ind, column_ind = linear_sum_assignment(matrix)
     t_end = time.time()
 
     if printlowestcost:
-        # func_name()
         lowest_cost = 0.00
         lowest_cost = matrix[row_ind, column_ind].sum()
-        print("%18s    %5.3f" % ("Scipy_cost", lowest_cost))
+        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del row_ind
     del column_ind
@@ -234,6 +240,10 @@ def run_scipy(matrix, printlowestcost):
 
 
 def run_munkres(matrix, printlowestcost):
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(method_name)
+    
     t_start = time.time()
     munk_mat = np.copy(matrix)
     m = munkres.Munkres()
@@ -241,15 +251,13 @@ def run_munkres(matrix, printlowestcost):
     t_end = time.time()
 
     if printlowestcost:
-        # func_name()
         columns = [x[1] for x in indices]
         lowest_cost = 0.00
         for i in range(len(columns)):
             lowest_cost += munk_mat[i, columns[i]]
             if args.verbose:
-                print("%12s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-                #print(" ", lowest_cost)
-        print("%18s    %5.3f" % ("Munkres_cost", lowest_cost))
+                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
+        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del indices
     return t_end-t_start

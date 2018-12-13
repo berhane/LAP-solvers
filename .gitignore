@@ -1,4 +1,4 @@
 *.pyc
 Misc/
 *.swp
-timing*png
+./timing*png

@@ -31,13 +31,7 @@ import lapjv
 from lapsolver import solve_dense
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
-
-'''
 import inspect
-def func_name():
-   print(inspect.stack()[0][1])
-'''
-
 
 def main():
 
@@ -165,18 +159,25 @@ def main():
 
 
 def run_lap_lapjv(matrix, printlowestcost):
+    #print module name
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(method_name)
+
+    #start timing 
     t_start = time.time()
     lowest_cost, row_ind, column_ind = lap.lapjv(matrix)
     t_end = time.time()
+    #end timing 
 
+    #print minimum cost information with varying verbosity
     if printlowestcost:
-        # func_name()
         if args.verbose:
             lowest_cost = 0.00
             for i in range(len(row_ind)):
                 lowest_cost += matrix[i, row_ind[i]]
-                print("%12s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-        print("%18s    %5.3f" % ("lap_lapjv_cost", lowest_cost))
+                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
+        print("%12s  %12s  %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del row_ind
     del column_ind
@@ -186,17 +187,21 @@ def run_lap_lapjv(matrix, printlowestcost):
 
 
 def run_lapjv_lapjv(matrix, printlowestcost):
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(method_name)
+
     t_start = time.time()
     row_ind, column_ind, _ = lapjv.lapjv(matrix)
     t_end = time.time()
+
     if printlowestcost:
-        # func_name()
         lowest_cost = 0.00
         for i in range(len(row_ind)):
             lowest_cost += matrix[i, row_ind[i]]
             if args.verbose:
-                print("%12s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-        print("%18s    %5.3f" % ("lapjv_lapjv_cost", lowest_cost))
+                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
+        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del row_ind
     del column_ind
@@ -206,14 +211,18 @@ def run_lapjv_lapjv(matrix, printlowestcost):
 
 
 def run_lapsolver(matrix, printlowestcost):
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(method_name)
+
     t_start = time.time()
     row_ind, column_ind = solve_dense(matrix)
     t_end = time.time()
+
     if printlowestcost:
-        # func_name()
         lowest_cost = 0.00
         lowest_cost = matrix[row_ind, column_ind].sum()
-        print("%18s    %5.3f" % ("lapsolver_cost", lowest_cost))
+        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del row_ind
     del column_ind
@@ -223,19 +232,22 @@ def run_lapsolver(matrix, printlowestcost):
 
 
 def run_hungarian(matrix, printlowestcost):
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(method_name)
+
     t_start = time.time()
     hung_mat = np.copy(matrix)
     row_ind, column_ind = hungarian.lap(hung_mat)
     t_end = time.time()
 
     if printlowestcost:
-        # func_name()        #func_name()
         lowest_cost = 0.00
         for i in range(len(row_ind)):
             lowest_cost += matrix[i, row_ind[i]]
             if args.verbose:
-                print("%12s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-        print("%18s    %5.3f" % ("Hungarian_cost", lowest_cost))
+                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
+        print("%12s %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del row_ind
     del column_ind
@@ -245,15 +257,18 @@ def run_hungarian(matrix, printlowestcost):
 
 
 def run_scipy(matrix, printlowestcost):
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(method_name)
+
     t_start = time.time()
     row_ind, column_ind = linear_sum_assignment(matrix)
     t_end = time.time()
 
     if printlowestcost:
-        # func_name()
         lowest_cost = 0.00
         lowest_cost = matrix[row_ind, column_ind].sum()
-        print("%18s    %5.3f" % ("Scipy_cost", lowest_cost))
+        print("%12s %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del row_ind
     del column_ind
@@ -263,6 +278,10 @@ def run_scipy(matrix, printlowestcost):
 
 
 def run_munkres(matrix, printlowestcost):
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(method_name)
+
     t_start = time.time()
     munk_mat = np.copy(matrix)
     m = munkres.Munkres()
@@ -270,14 +289,13 @@ def run_munkres(matrix, printlowestcost):
     t_end = time.time()
 
     if printlowestcost:
-        # func_name()
         columns = [x[1] for x in indices]
         lowest_cost = 0.00
         for i in range(len(columns)):
             lowest_cost += munk_mat[i, columns[i]]
             if args.verbose:
-                print("%12s  %6d  %5.3f" % ("      ", i ,lowest_cost))
-        print("%18s    %5.3f" % ("Munkres_cost", lowest_cost))
+                print("%18s  %6d  %5.3f" % ("      ", i ,lowest_cost))
+        print("%12s  %12s   %5.3f" % (method_name, "minimum cost", lowest_cost))
 
     del indices
     return t_end-t_start
