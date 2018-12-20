@@ -10,7 +10,6 @@ The scripts benchmark the performance of Python2/3 linear assignment problem sol
   * https://github.com/Hrldcpr/Hungarian
 * **lap.lapjv** - a wrapper to a C++ implementation of Jonker-Volgenant algorithm provided by Tomas Kazmar
   * https://github.com/gatagat/lap
-
   In addition, these two solvers are added for Python3
 * **lapjv.lapjv** - a wrapper to a C++ implementation of Jonker-Volgenant algorithm re-written for Python 3 and optimized to take advantage of AVX2 instruction sets by Vadim Markovtsev at src{d}.
   * Please see the [blog post here](https://blog.sourced.tech/post/lapjv/)
@@ -34,14 +33,13 @@ The purpose of this benchmarking exercise is to see which implementation perform
 
 # Contents
 The repo contains the following:
-* `benchmark-lap-solvers-py2.py` - a Python2 script comparing the first four implementations
-* `benchmark-lap-solvers-py3.py` - a Python3 script comparing all six implementations
+* `benchmark-lap-solvers.py` - a Python2/3 script comparing four/six implementations
 
 # Usage
 It's simple once you have installed the necessary packages.
 
 ```
-Usage: benchmark-lap-solvers-py3.py [-h] [-c] [-v] [-np] [-sp] [--min [min]]
+Usage: benchmark-lap-solvers.py [-h] [-c] [-v] [-np] [-sp] [--min [min]]
                                     [--max [max]] [--ncyc [ncyc]]
 
     Benchmarks the performance of linear assignment problem solvers for
