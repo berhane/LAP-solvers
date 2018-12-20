@@ -9,10 +9,10 @@ Then the data type is recast.
 
 The data types supported by NumPy are listed below.
 
-where __DTYPE__ is
+where `__DTYPE__` is
 
-|Data type 	 | Description | Tested ? |
-|:-----------:|:------------------:|:----------|
+|`__DTYPE__` 	 | Description | Tested ? |
+|:-----------:|------------------|:----------|
 |intc | 	Identical to C int (normally int32 or int64) |  |
 |int8  |	Byte (-128 to 127) |  |
 |int16 |	Integer (-32768 to 32767) | tested |
