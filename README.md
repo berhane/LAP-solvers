@@ -73,10 +73,10 @@ optional arguments:
 ## Examples
 | command   |      execution    |  note     |
 |----------|:-------------:|:-------|
-| `python3 ./benchmark-lap-solvers-py3.py` | `python3 ./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096` | default |
-| `python3 ./benchmark-lap-solvers-py3.py --min 2 --max 512` | `python3 ./benchmark-lap-solvers-py3.py --ncyc 3 --min 2 --max 512` | default, except it looks at small matrices only |
-| `python3 ./benchmark-lap-solvers-py3.py -np` | `python3 ./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096 -np` | default, except plotting is suppressed |
-| `python3 ./benchmark-lap-solvers-py3.py --printcost` | `python3 ./benchmark-lap-solvers-py3.py --ncyc 3 --min 8 --max 4096 --printcost` | default, except it prints lowest cost for each method |
+| `python3 ./benchmark-lap-solvers.py` | `python3 ./benchmark-lap-solvers.py --ncyc 3 --min 8 --max 4096` | default |
+| `python3 ./benchmark-lap-solvers.py --min 2 --max 512` | `python3 ./benchmark-lap-solvers.py --ncyc 3 --min 2 --max 512` | default, except it looks at small matrices only |
+| `python3 ./benchmark-lap-solvers.py -np` | `python3 ./benchmark-lap-solvers.py --ncyc 3 --min 8 --max 4096 -np` | default, except plotting is suppressed |
+| `python3 ./benchmark-lap-solvers.py --printcost` | `python3 ./benchmark-lap-solvers.py --ncyc 3 --min 8 --max 4096 --printcost` | default, except it prints lowest cost for each method |
 
 If you want to add other solvers to the list, it should be easy to figure out what parts to update in the scripts.
 
