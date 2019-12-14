@@ -1,6 +1,6 @@
 # Purpose
 
-The scripts benchmark the performance of Python2/3 linear assignment problem solvers for random cost matrices of different sizes.  These solvers are:
+The script benchmarks the performance of Python2/3 linear assignment problem solvers for random cost matrices of different sizes.  These solvers are:
 
 * **linear_sum_assignment** - a Python implementation of the Hungarian algorithm provided in SciPy
   * https://github.com/scipy/scipy/
@@ -34,6 +34,7 @@ The purpose of this benchmarking exercise is to see which implementation perform
 # Contents
 The repo contains the following:
 * `benchmark-lap-solvers.py` - a Python2/3 script comparing four/six implementations
+* `benchmark-lap-solvers.ipynb` - a Jupyter notebook comparing four/six implementations
 
 # Usage
 It's simple once you have installed the necessary packages.
