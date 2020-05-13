@@ -7,6 +7,7 @@ The script benchmarks the performance of Python2/3 linear assignment problem sol
 * **munkres** - a Python implementation of the Hungarian algorithm provided by Brian Clapper
   * https://github.com/bmc/munkres
 * **hungarian** - a wrapper to a C++ implementation Knuth's Hungarian algorithm provided by Harold Cooper
+  * does not work with Python 3.6 and 3.7 
   * https://github.com/Hrldcpr/Hungarian
 * **lap.lapjv** - a wrapper to a C++ implementation of Jonker-Volgenant algorithm provided by Tomas Kazmar
   * https://github.com/gatagat/lap
@@ -34,7 +35,8 @@ The purpose of this benchmarking exercise is to see which implementation perform
 # Contents
 The repo contains the following:
 * `benchmark-lap-solvers.py` - a Python2/3 script comparing four/six implementations
-* `benchmark-lap-solvers.ipynb` - a Jupyter notebook comparing four/six implementations
+* `benchmark-lap-solvers-py3.ipynb` - a Jupyter notebook comparing four/six implementations. It has
+  been tested using Python 3.6 and 3.7.
 
 # Usage
 It's simple once you have installed the necessary packages.
