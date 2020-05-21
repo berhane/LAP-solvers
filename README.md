@@ -176,34 +176,20 @@ If requested via the `--printcost` flag, it will also print the minimum cost for
 Solving matrices of sizes up to 2^{n} where n is {'lapsolver': 15, 'lap_lapjv': 15, 'munkres': 7, 'hungarian': 12, 'lapjv_lapjv': 15, 'scipy': 15}
 
 8 x 8 ... 
-Cycle  0 
- lapjv_lapjv
- lap_lapjv
- scipy
- lapsolver
- hungarian
- munkres
+
+Cycle  0   lapjv_lapjv  lap_lapjv  scipy  lapsolver  hungarian  munkres
+Cycle  1   lapjv_lapjv  lap_lapjv  scipy  lapsolver  hungarian  munkres
+Cycle  2   lapjv_lapjv  lap_lapjv  scipy  lapsolver  hungarian  munkres
 
 .
 .
 .
 
 16384 x 16384 ... 
-Cycle  0 
- lapjv_lapjv
- lap_lapjv
- scipy
- lapsolver
-Cycle  1 
- lapjv_lapjv
- lap_lapjv
- scipy
- lapsolver
-Cycle  2 
- lapjv_lapjv
- lap_lapjv
- scipy
- lapsolver
+
+Cycle  0   lapjv_lapjv  lap_lapjv  scipy  lapsolver  
+Cycle  1   lapjv_lapjv  lap_lapjv  scipy  lapsolver  
+Cycle  2   lapjv_lapjv  lap_lapjv  scipy  lapsolver 
 
 
 Package Versions for the current run
