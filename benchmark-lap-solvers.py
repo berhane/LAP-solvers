@@ -21,8 +21,14 @@
 # They all formally have O(n^3) complexity, but their performance
 # differs substantially based on their implementation.
 
+#from __future__ import print_function
 
-from __future__ import print_function
+# Check for missing packages; Install and load packages
+def install_modules(package):
+    try:
+        __import__(package)
+    except ImportError:
+        pip.main(['install', '--user', package])
 
 import time
 import argparse
@@ -32,17 +38,23 @@ from matplotlib.ticker import FormatStrFormatter
 import inspect
 import sys
 
-#LAP Solvers
+#LAP Solvers - install packages if they are missing
+install_modules("munkres")
 import munkres
+install_modules("scipy")
 from scipy.optimize import linear_sum_assignment
 from scipy.optimize import curve_fit
+install_modules("hungarian")
 import hungarian
+install_modules("lap")
 import lap
 
 #If running Python3, benchmark all implementations
 if sys.version_info[0] >= 3:
-    import lapjv
-    from lapsolver import solve_dense
+   install_modules("lapjv")
+   import lapjv
+   install_modules("lapsolver")
+   from lapsolver import solve_dense
 
 def main():
 
@@ -50,17 +62,13 @@ def main():
 
     # METHODS being benchmarked -- Add new METHOD[S] here
     if sys.version_info[0] >= 3:
-        methods = ["lap_lapjv", "lapjv_lapjv", "lapsolver", "hungarian", "scipy", "munkres"]
+        methods = ["lapjv_lapjv", "lap_lapjv", "scipy", "lapsolver", "hungarian", "munkres"]
     else:
-        methods = ["lap_lapjv", "hungarian","scipy", "munkres"]
+        methods = ["lap_lapjv", "scipy", "hungarian", "munkres"]
 
-    min = int(np.floor(np.log2(args.min)))      # 2^min =  8x8 cost matrix
-    max = int(np.ceil(np.log2(args.max)))      # 2^max
-
+    minimum = int(np.floor(np.log2(args.min)))      # 2^min =  8x8 cost matrix
+    maximum = int(np.ceil(np.log2(args.max)))      # 2^max
     ncyc = int(args.ncyc)                      # number of cycle
-
-    #d_type = str('np.')+str(args.datatype)
-    #print(d_type)
 
     # LIMITS - add limit for new METHOD[S] here
     # The size of the matrix to be solved is limited to 2^{limit['method']}
@@ -69,12 +77,12 @@ def main():
     # necessary to limit them to smaller
     # matrices
     limit = {}
-    limit['munkres'] = 7
-    limit['scipy'] = 9
-    limit['hungarian'] = max
-    limit['lap_lapjv'] = max
-    limit['lapjv_lapjv'] = max
-    limit['lapsolver'] = max
+    limit['munkres'] = min(7,maximum)
+    limit['hungarian'] = min(12,maximum)
+    limit['scipy'] = maximum
+    limit['lap_lapjv'] = maximum
+    limit['lapjv_lapjv'] = maximum
+    limit['lapsolver'] = maximum
     print("Solving matrices of sizes up to 2^{n} where n is " + str(limit))
 
     # arrays to store data
@@ -87,7 +95,7 @@ def main():
     base = 2               # will build matrices of size base^n and solve them
 
     # for matrices of size 2^{min} - 2^{max}
-    for i in range(min, max):
+    for i in range(minimum, maximum):
         matrix_size = pow(base, i)
         #print(("\n" +  str(matrix_size) + " x " + str(matrix_size) + " ... cycle ") ,end=" ")
         print(("\n" + str(matrix_size) + " x " + str(matrix_size) + " ... "))
@@ -132,6 +140,18 @@ def main():
                 t_methods[method] = np.append(t_methods[method],
                                               np.array([[matrix_size, methods_data[method]/ncyc]]), axis=0)
 
+    #Print version information
+    print("\n\nPackage Versions for the current run")
+    print("Python - ", sys.version)
+    for method in methods:
+       tmp=method.split("_")
+       # hungarian and lapjv don't print version numbers
+       if tmp[0] != 'hungarian': 
+          if tmp[0] != 'lapjv':
+             ptmp=__import__(tmp[0])
+             method_version = ptmp.__version__
+             print(tmp[0], " - ", ptmp.__version__)
+
     # print timing information to screen
     dimensions = t_methods[0][:, [0]]
     dimensions = dimensions.flatten()
@@ -141,6 +161,7 @@ def main():
     for i in range(len(dimensions)):
         print('%6d ' % (dimensions[i]), end=" ")
     print(" ")
+
 
     np.set_printoptions(suppress=True, precision=5, linewidth=100)
     for method in range(len(methods)):
@@ -170,7 +191,7 @@ def main():
         plt.title('Time to solve LAPs using different modules', fontsize=20)
         plt.legend(fontsize=14)
         fig_filename = "timing-LAPs-py3-" + \
-            str(pow(2, min)) + "-" + str(pow(2, max)) + ".png"
+            str(pow(2, minimum)) + "-" + str(pow(2, maximum)) + ".png"
         print("Figure saved to file %18s" % (fig_filename))
         fig.set_size_inches(11, 8.5)
         plt.savefig(fig_filename, bbox_inches='tight', dpi=150)
@@ -179,8 +200,6 @@ def main():
 
 # Solve LAP using different methods
 # LAPJV
-
-
 def run_lap_lapjv(matrix, printlowestcost):
     #print module name
     temp = inspect.stack()[0][3]
