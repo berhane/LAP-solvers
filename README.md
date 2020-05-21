@@ -23,7 +23,7 @@ They all formally have O(n<sup>3</sup>) complexity, but their performance differ
 
 |  Module                             | Python or C/C++/Cython  | Algorithm     |
 |-------------------------------------|:-----------------------:|:--------------|
-|scipy.optimize.linear_sum_assignment |          Python         | Hungarian     |
+|scipy.optimize.linear_sum_assignment | Python(<v1.4)/C++((>v1.4))  | Hungarian     |
 |munkres.Munkres                      |          Python         | Hungarian     |
 |hungarian.lap                        |          C++            | Hungarian     |
 |lap.lapjv                            |          C++            | Jonker-Volgenant     |
@@ -87,16 +87,17 @@ If you want to add other solvers to the list, it should be easy to figure out wh
 * `numpy` module. If you don't have it already, you can install it using `pip[2/3]` or `conda`. Most of the packages should be available in the default Conda channels/repos, but you may have to search a little harder for others.
   * `pip[2/3] install numpy`
   * `conda install numpy`
-* `matplotlib` module.
+* `matplotlib` module
   * `pip[2/3] install   matplotlib`
   * `conda install matplotlib`
-* scipy module.
-  * `pip[2/3] install  scipy`
+* scipy module (install version 1.4+ with Python 3.5+ for a fast C++ implementation)
+  * `pip2 install  scipy`
+  * `pip3 install  scipy=1.4`
   * `conda install scipy`
 * `munkres` module by Brian Clapper.
    * `pip[2/3] install munkres`
    * `conda install munkres`
-* `hungarian` module by Harold Cooper.
+* `hungarian` module by Harold Cooper (does not work with Python 3.5+)
   * `pip[2/3] install   hungarian`
   * `conda install -c psi4 hungarian`
 * `lap` module by Tomas Kozmar.
@@ -110,7 +111,7 @@ If you want to add other solvers to the list, it should be easy to figure out wh
 
 # Output
 The script will produce output similar to what's shown below. Some things to note are:
-* The timings here corresponds to an average of three Python 2.7.15/3.7.1 runs on a 2013 MacPro with a 3.5 GHz Intel Xeon E5-1650v2 processor and 32GB of RAM
+* The timings here corresponds to an average of three Python 2.7.15/3.5.6 runs on a 2013 MacPro with a 3.5 GHz Intel Xeon E5-1650v2 processor and 32GB of RAM
 * The random matrices are filled with floating point numbers ranging from 0 to the size (# of rows or columns) of the matrix. They are generated using numpy: `cost_matrix = matrix_size * np.random.random((matrix_size, matrix_size))`
 
 ## Python2
@@ -180,22 +181,68 @@ If requested via the `--printcost` flag, it will also print the minimum cost for
 
 ## Python3
 <pre>
-Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 14, 'lap_lapjv': 14, 'lapjv_lapjv': 14, 'lapsolver': 14}
+Solving matrices of sizes up to 2^{n} where n is {'lapsolver': 15, 'lap_lapjv': 15, 'munkres': 7, 'hungarian': 12, 'lapjv_lapjv': 15, 'scipy': 15}
 
-8 x 8 ... cycle
-Cycle  0
-    lap_lapjv_cost    7.976
-  lapjv_lapjv_cost    7.976
-    lapsolver_cost    7.976
-    Hungarian_cost    7.976
-        Scipy_cost    7.976
-      Munkres_cost    7.976
+8 x 8 ... 
+Cycle  0 
+ lapjv_lapjv
+ lap_lapjv
+ scipy
+ lapsolver
+ hungarian
+ munkres
 
 .
 .
 .
 
+16384 x 16384 ... 
+Cycle  0 
+ lapjv_lapjv
+ lap_lapjv
+ scipy
+ lapsolver
+Cycle  1 
+ lapjv_lapjv
+ lap_lapjv
+ scipy
+ lapsolver
+Cycle  2 
+ lapjv_lapjv
+ lap_lapjv
+ scipy
+ lapsolver
 
+
+Package Versions for the current run
+Python -  3.5.6 |Anaconda, Inc.| (default, Aug 26 2018, 21:41:56) 
+[GCC 7.3.0]
+lap  -  0.4.0
+scipy  -  1.4.0
+lapsolver  -  1.0.2
+munkres  -  1.0.12
+
+
+Matrix_size  [  8        16       32       64       128      256      512      1024     2048     4096      8192     16384
+lapjv_lapjv  [  0.00001  0.00001  0.00002  0.00004  0.00011  0.00066  0.00659  0.02742  0.13955  0.74462   3.05277  14.64501]
+lap_lapjv    [  0.00005  0.00003  0.00004  0.00006  0.00018  0.00104  0.00795  0.03303  0.15438  1.92253   7.41732  50.84391]
+scipy        [  0.00006  0.00005  0.00008  0.00018  0.00067  0.0025   0.01355  0.06346  0.34247  1.88682   9.30888  52.81564]
+lapsolver    [  0.00002  0.00001  0.00003  0.0001   0.00038  0.00214  0.01347  0.07315  0.40603  2.47342   12.3546  77.90600]
+hungarian    [  0.00001  0.00001  0.00004  0.00013  0.00071  0.00429  0.03393  0.24279  1.87886  15.30685  ]
+munkres      [  0.00049  0.00384  0.04524  0.34832  3.26252  ]
+
+Figure saved to file timing-LAPs-py3-8-32768.png
+
+Package Versions for the current run
+Python -  3.5.6 |Anaconda, Inc.| (default, Aug 26 2018, 21:41:56)
+[GCC 7.3.0]
+lap  -  0.4.0
+lapsolver  -  1.0.2
+scipy  -  1.4.0
+munkres  -  1.0.12
+
+<!--
+### Timing from runs prior to scipy improvements
 Matrix_size       8        16      32       64      128      256      512     1024     2048       4096       8192     16384
   lap_lapjv  [ 0.0003   0.00005  0.00009  0.00013  0.00037  0.00224  0.00581  0.0702   0.24894  1.47379    9.61785   63.22643]
 lapjv_lapjv  [ 0.00006  0.00001  0.00003  0.00006  0.00031  0.00231  0.00625  0.0755   0.29286  1.24798    5.49919   23.89383]
@@ -203,16 +250,17 @@ lapjv_lapjv  [ 0.00006  0.00001  0.00003  0.00006  0.00031  0.00231  0.00625  0.
   hungarian  [ 0.00001  0.00002  0.00004  0.00013  0.00085  0.00503  0.03316  0.22956  1.63596 15.02935  127.19425 1025.16906]
       scipy  [ 0.00088  0.00208  0.00881  0.02201  0.10714  0.58886  4.38091]
     munkres  [ 0.00075  0.00596  0.09011  0.66533  7.30088]
-
   Figure saved to file timings-LAPs-py3-8-16384.png
+-->
 </pre>
 
 ![alt text](images/figure-py3.png "Python3 benchmark test")
 
 # Takeaways
 
-1. `scipy` and `munkres` are much slower than `hungarian`, `lapsolver`, `lap.lapjv`, and `lapjv.lapjv` for all matrix sizes
-2. `hungarian` performs well for smaller matrices. For anything larger than 256x256, `lapsolver`, `lap.lapjv` and `lapjv.lapjv` are about an order of magnitude faster than `hungarian`
-3. `lap.lapjv` is am implementation intended to solve dense matrices. Its sparse matrix solver analog named `lap.lapmod` is more efficient for larger sparse matrices. Both are implemented in the `lap` module.
-4. `lapjv.lapjv` has the best performance virtually for all matrix sizes.
-5. For the purposes of improving [Arbalign](https://github.com/berhane/arbalign), `hungarian` remains a good choice for most molecular systems I'm interested in which don't have more than 100x100 distance matrices the same type to solve. However, if the tool is to be applied to larger molecules such as proteins and DNA, it would be worthwhile to use `lapjv.lapjv`, `lapsolver`, `lap.lapjv` or `lap.lapmod`
+1. `scipy==1.4` is much faster than previous versions and it is competitive with the other implementations, especially for larger matrices. This is a great development since it probably gets used more than the other implementations by virtue of scipy's popularity.
+2. `munkres` is much slower than `hungarian`, `lapsolver`, `scipy`, `lap.lapjv`, and `lapjv.lapjv` for all matrix sizes
+3. `hungarian` performs well for smaller matrices. For anything larger than 256x256, `lapsolver`, `lap.lapjv` and `lapjv.lapjv` are about an order of magnitude faster than `hungarian`
+4. `lap.lapjv` is am implementation intended to solve dense matrices. Its sparse matrix solver analog named `lap.lapmod` is more efficient for larger sparse matrices. Both are implemented in the `lap` module.
+5. `lapjv.lapjv` has the best performance virtually for all matrix sizes.
+6. For the purposes of improving [Arbalign](https://github.com/berhane/arbalign), `hungarian` remains a good choice for most molecular systems I'm interested in which don't have more than 100x100 distance matrices the same type to solve. However, if the tool is to be applied to larger molecules such as proteins and DNA, it would be worthwhile to use `lapjv.lapjv`, `lapsolver`, `lap.lapjv` or `lap.lapmod`
