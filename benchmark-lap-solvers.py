@@ -44,8 +44,8 @@ import munkres
 install_modules("scipy")
 from scipy.optimize import linear_sum_assignment
 from scipy.optimize import curve_fit
-install_modules("hungarian")
-import hungarian
+#install_modules("hungarian")
+#import hungarian
 install_modules("lap")
 import lap
 
@@ -55,6 +55,8 @@ if sys.version_info[0] >= 3:
    import lapjv
    install_modules("lapsolver")
    from lapsolver import solve_dense
+   install_modules("laptools")
+   from laptools import clap 
 
 def main():
 
@@ -62,7 +64,8 @@ def main():
 
     # METHODS being benchmarked -- Add new METHOD[S] here
     if sys.version_info[0] >= 3:
-        methods = ["lapjv_lapjv", "lap_lapjv", "scipy", "lapsolver", "hungarian", "munkres"]
+        #methods = ["lapjv_lapjv", "lap_lapjv", "scipy", "lapsolver", "hungarian", "munkres", "laptools_clap"]
+        methods = ["lapjv_lapjv", "lap_lapjv", "scipy", "lapsolver", "laptools_clap", "munkres"]
     else:
         methods = ["lap_lapjv", "scipy", "hungarian", "munkres"]
 
@@ -78,11 +81,12 @@ def main():
     # matrices
     limit = {}
     limit['munkres'] = min(7,maximum)
-    limit['hungarian'] = min(12,maximum)
+    #limit['hungarian'] = min(12,maximum)
     limit['scipy'] = maximum
     limit['lap_lapjv'] = maximum
     limit['lapjv_lapjv'] = maximum
     limit['lapsolver'] = maximum
+    limit['laptools_clap'] = maximum
     print("Solving matrices of sizes up to 2^{n} where n is " + str(limit))
 
     # arrays to store data
@@ -128,6 +132,9 @@ def main():
                         cost_matrix, args.printcost)
                 elif methods[method] == 'lapsolver' and i <= limit[methods[method]]:
                     methods_data[method] += run_lapsolver(
+                        cost_matrix, args.printcost)
+                elif methods[method] == 'laptools_clap' and i <= limit[methods[method]]:
+                    methods_data[method] += run_laptools_clap(
                         cost_matrix, args.printcost)
                     # If you want to benchmark a new METHOD, add another ELIF statement here
                 else:
@@ -296,8 +303,6 @@ def run_hungarian(matrix, printlowestcost):
     return t_end-t_start
 
 # Scipy-linear_sum_assignment
-
-
 def run_scipy(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
@@ -317,8 +322,6 @@ def run_scipy(matrix, printlowestcost):
     return t_end-t_start
 
 # Munkres
-
-
 def run_munkres(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
@@ -341,6 +344,22 @@ def run_munkres(matrix, printlowestcost):
 
     del indices
     del munk_mat
+    return t_end-t_start
+
+
+# laptools_clap
+def run_laptools_clap(matrix, printlowestcost):
+    temp = inspect.stack()[0][3]
+    method_name=temp[4:]
+    print(" %s" % ( method_name ), end=' ')
+
+    t_start = time.time()
+    lowest_cost = clap.cost(0,1,matrix)
+    t_end = time.time()
+
+    if printlowestcost:
+        print("  %12s %s %5.3f" % (method_name, "minimum cost", lowest_cost))
+
     return t_end-t_start
 
 # NEW METHOD
