@@ -1,6 +1,6 @@
 # Purpose
 
-The script benchmarks the performance of Python2/3 linear assignment problem solvers for random cost matrices of different sizes.  These solvers are:
+The script benchmarks the performance of Python3 linear assignment problem solvers for random cost matrices of different sizes.  These solvers are:
 
 * **linear_sum_assignment** - a Python implementation of the Hungarian algorithm provided in SciPy
   * https://github.com/scipy/scipy/
@@ -23,7 +23,7 @@ They all formally have O(n<sup>3</sup>) complexity, but their performance differ
 
 |  Module                             | Python or C/C++/Cython  | Algorithm     |
 |-------------------------------------|:-----------------------:|:--------------|
-|scipy.optimize.linear_sum_assignment | Python(<v1.4)/C++((>v1.4))  | Hungarian     |
+|scipy.optimize.linear_sum_assignment | Python(<v1.4)/C++(=>v1.4))  | Hungarian     |
 |munkres.Munkres                      |          Python         | Hungarian     |
 |hungarian.lap                        |          C++            | Hungarian     |
 |lap.lapjv                            |          C++            | Jonker-Volgenant     |
@@ -34,7 +34,7 @@ The purpose of this benchmarking exercise is to see which implementation perform
 
 # Contents
 The repo contains the following:
-* `benchmark-lap-solvers.py` - a Python2/3 script comparing four/six implementations
+* `benchmark-lap-solvers.py` - a Python3 script comparing four/six implementations
 * `benchmark-lap-solvers-py3.ipynb` - a Jupyter notebook comparing four/six implementations. It has
   been tested using Python 3.6 and 3.7.
 
@@ -84,24 +84,23 @@ optional arguments:
 If you want to add other solvers to the list, it should be easy to figure out what parts to update in the scripts.
 
 # Requirements
-* `numpy` module. If you don't have it already, you can install it using `pip[2/3]` or `conda`. Most of the packages should be available in the default Conda channels/repos, but you may have to search a little harder for others.
-  * `pip[2/3] install numpy`
+* `numpy` module. If you don't have it already, you can install it using `pip3` or `conda`. Most of the packages should be available in the default Conda channels/repos, but you may have to search a little harder for others.
+  * `pip3 install numpy`
   * `conda install numpy`
 * `matplotlib` module
-  * `pip[2/3] install   matplotlib`
+  * `pip3 install   matplotlib`
   * `conda install matplotlib`
 * scipy module (install version 1.4+ with Python 3.5+ for a fast C++ implementation)
-  * `pip2 install  scipy`
-  * `pip3 install  scipy=1.4`
+  * `pip3 install  scipy==1.4`
   * `conda install scipy`
 * `munkres` module by Brian Clapper.
-   * `pip[2/3] install munkres`
+   * `pip3 install munkres`
    * `conda install munkres`
 * `hungarian` module by Harold Cooper (does not work with Python 3.5+)
-  * `pip[2/3] install   hungarian`
+  * `pip3 install   hungarian`
   * `conda install -c psi4 hungarian`
 * `lap` module by Tomas Kozmar.
-  * `pip[2/3] install lap`
+  * `pip3 install lap`
   * `conda install lap`
 * `lapjv` module by src{d} for Python3
   * `pip3 install lapjv`
@@ -111,15 +110,14 @@ If you want to add other solvers to the list, it should be easy to figure out wh
 
 # Output
 The script will produce output similar to what's shown below. Some things to note are:
-* The timings here corresponds to an average of three Python 2.7.15/3.5.6 runs on a 2013 MacPro with a 3.5 GHz Intel Xeon E5-1650v2 processor and 32GB of RAM
+* The timings here corresponds to an average of three Python 3.5.6 runs on CentOS 7 machine with 2.4 GHz Intel Xeon Gold 6148 processor and 192GB of RAM
 * The random matrices are filled with floating point numbers ranging from 0 to the size (# of rows or columns) of the matrix. They are generated using numpy: `cost_matrix = matrix_size * np.random.random((matrix_size, matrix_size))`
 
+<!--
 ## Python2
 * Data of timing for solving LAP of random cost matrices of sizes 2<sup>min</sup> x 2<sup>min</sup>  to 2<sup>max</sup> x 2<sup>max</sup>.
-
 <pre>
 Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9, 'hungarian': 13, 'lap.lapjv': 13}
-
 8 x 8
 16 x 16
 32 x 32
@@ -130,20 +128,15 @@ Solving matrices of sizes up to limit 2^{n} where n is {'munkres': 7, 'scipy': 9
 1024 x 1024
 2048 x 2048
 4096 x 4096
-
 Matrix size  [   8      16       32      64     128     256     512     1024    2048   4096]
      lapjv  [0.00007 0.00003 0.00004 0.00008 0.00022 0.00149 0.00574 0.03733 0.22209  1.14318]
  hungarian  [0.00001 0.00001 0.00002 0.00011 0.00066 0.00472 0.03157 0.21561 1.71368 14.11281]
      scipy  [0.0004  0.00044 0.00086 0.00353 0.01809 0.10358 1.01071]
    munkres  [0.00033 0.00091 0.00445 0.03216 0.25957]
-
    Figure saved to file timings-LAPs-py2-8-8192.png
 </pre>
-
 * plot of timing for LAP solving random cost matrices of sizes 2<sup>min</sup> x 2<sup>min</sup>  to 2<sup>max</sup> x 2<sup>max</sup>, where *min* and *max* are limited to smaller numbers for `munkres` and `scipy` in the interest of time.
-
 ![alt text](images/figure-py2.png "Python2 benchmark test")
-
 If requested via the `--printcost` flag, it will also print the minimum cost for each random cost matrix by each implementation. This test ensures that the methods are making consistent/correct assignments.
 <pre>
 8 x 8 ... cycle
@@ -176,10 +169,9 @@ If requested via the `--printcost` flag, it will also print the minimum cost for
     lap_lapjv_cost    3424.101
     Hungarian_cost    3424.101      
 </pre>
+-->
 
-
-
-## Python3
+* Data of timing for solving LAP of random cost matrices of sizes 2<sup>min</sup> x 2<sup>min</sup>  to 2<sup>max</sup> x 2<sup>max</sup>.
 <pre>
 Solving matrices of sizes up to 2^{n} where n is {'lapsolver': 15, 'lap_lapjv': 15, 'munkres': 7, 'hungarian': 12, 'lapjv_lapjv': 15, 'scipy': 15}
 
@@ -254,7 +246,13 @@ lapjv_lapjv  [ 0.00006  0.00001  0.00003  0.00006  0.00031  0.00231  0.00625  0.
 -->
 </pre>
 
+
+* plot of timing for LAP solving random cost matrices of sizes 2<sup>min</sup> x 2<sup>min</sup>  to 2<sup>max</sup> x 2<sup>max</sup>, where *min* and *max* are limited to smaller numbers for `munkres` and `scipy` in the interest of time.
+
 ![alt text](images/figure-py3.png "Python3 benchmark test")
+
+If requested via the `--printcost` flag, it will also print the minimum cost for each random cost matrix by each implementation. This test ensures that the methods are making consistent/correct assignments.
+<pre>
 
 # Takeaways
 
