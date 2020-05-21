@@ -97,8 +97,7 @@ def main():
     # for matrices of size 2^{min} - 2^{max}
     for i in range(minimum, maximum):
         matrix_size = pow(base, i)
-        #print(("\n" +  str(matrix_size) + " x " + str(matrix_size) + " ... cycle ") ,end=" ")
-        print(("\n" + str(matrix_size) + " x " + str(matrix_size) + " ... "))
+        print(("\n\n" + str(matrix_size) + " x " + str(matrix_size) + " ... "))
         methods_data = np.zeros(len(methods), float)
         # Generate n_cyc random matrices and solve them using different methods
         for j in range(ncyc):
@@ -107,7 +106,7 @@ def main():
             #cost_matrix=mat.astype(str(datatype))
             #cost_matrix=recast_mat(mat, str(datatype))
             #print((str(j) + " "), end=" ")
-            print("Cycle ", (str(j) + " "))
+            print("\nCycle ", (str(j) + " "), end=' ')
             # print("\n")
             # print(cost_matrix)
             for method in range(len(methods)):
@@ -204,7 +203,7 @@ def run_lap_lapjv(matrix, printlowestcost):
     #print module name
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
-    print(" %s" % ( method_name ) )
+    print(" %s" % ( method_name ), end=' ')
 
     #start timing
     t_start = time.time()
@@ -231,7 +230,7 @@ def run_lap_lapjv(matrix, printlowestcost):
 def run_lapjv_lapjv(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
-    print(" %s" % ( method_name ) )
+    print(" %s" % ( method_name ), end=' ')
 
     t_start = time.time()
     row_ind, column_ind, _ = lapjv.lapjv(matrix)
@@ -255,7 +254,7 @@ def run_lapjv_lapjv(matrix, printlowestcost):
 def run_lapsolver(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
-    print(" %s" % ( method_name ) )
+    print(" %s" % ( method_name ), end=' ')
 
     t_start = time.time()
     row_ind, column_ind = solve_dense(matrix)
@@ -276,7 +275,7 @@ def run_lapsolver(matrix, printlowestcost):
 def run_hungarian(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
-    print(" %s" % ( method_name ) )
+    print(" %s" % ( method_name ), end=' ')
 
     t_start = time.time()
     hung_mat = np.copy(matrix)
@@ -302,7 +301,7 @@ def run_hungarian(matrix, printlowestcost):
 def run_scipy(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
-    print(" %s" % ( method_name ) )
+    print(" %s" % ( method_name ), end=' ')
 
     t_start = time.time()
     row_ind, column_ind = linear_sum_assignment(matrix)
@@ -323,7 +322,7 @@ def run_scipy(matrix, printlowestcost):
 def run_munkres(matrix, printlowestcost):
     temp = inspect.stack()[0][3]
     method_name=temp[4:]
-    print(" %s" % ( method_name ) )
+    print(" %s" % ( method_name ), end=' ')
 
     t_start = time.time()
     munk_mat = np.copy(matrix)
