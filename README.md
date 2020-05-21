@@ -225,14 +225,6 @@ munkres      [  0.00049  0.00384  0.04524  0.34832  3.26252  ]
 
 Figure saved to file timing-LAPs-py3-8-32768.png
 
-Package Versions for the current run
-Python -  3.5.6 |Anaconda, Inc.| (default, Aug 26 2018, 21:41:56)
-[GCC 7.3.0]
-lap  -  0.4.0
-lapsolver  -  1.0.2
-scipy  -  1.4.0
-munkres  -  1.0.12
-
 <!--
 ### Timing from runs prior to scipy improvements
 Matrix_size       8        16      32       64      128      256      512     1024     2048       4096       8192     16384
@@ -252,7 +244,6 @@ lapjv_lapjv  [ 0.00006  0.00001  0.00003  0.00006  0.00031  0.00231  0.00625  0.
 ![alt text](images/figure-py3.png "Python3 benchmark test")
 
 If requested via the `--printcost` flag, it will also print the minimum cost for each random cost matrix by each implementation. This test ensures that the methods are making consistent/correct assignments.
-<pre>
 
 # Takeaways
 
