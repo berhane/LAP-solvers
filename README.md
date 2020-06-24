@@ -18,6 +18,8 @@ The script benchmarks the performance of Python3 linear assignment problem solve
 * **lapsolver** - implementation for dense matrices based on shortest path augmentation by Christoph Heindl.
   * Please note that Christioph has also done a [benchmark of LAP solvers](https://github.com/cheind/py-lapsolver/tree/master/lapsolver/benchmarks)
   * https://github.com/cheind/py-lapsolver      
+* **laptools.clap** - new python implementation
+  * https://github.com/jdmoorman/laptools      
 
 They all formally have O(n<sup>3</sup>) complexity, but their performance differs substantially based on their implementation and the size of the matrix they are trying to solve. The solvers can be classified based on some unique characteristics.
 
@@ -25,6 +27,7 @@ They all formally have O(n<sup>3</sup>) complexity, but their performance differ
 |-------------------------------------|:-----------------------:|:--------------|
 |scipy.optimize.linear_sum_assignment | Python(<v1.4)/C++(=>v1.4))  | Hungarian     |
 |munkres.Munkres                      |          Python         | Hungarian     |
+|laptools.clap                        |          Python         | ?     |
 |hungarian.lap                        |          C++            | Hungarian     |
 |lap.lapjv                            |          C++            | Jonker-Volgenant     |
 |lapjv.lapjv                          |          C++            | Jonker-Volgenant     |
@@ -107,6 +110,8 @@ If you want to add other solvers to the list, it should be easy to figure out wh
 * `lapsolver` module by Christoph Heindl
     * `pip3 install lapsolver`
     * `conda install -c loopbio lapsolver `
+* `laptoools` module by jdomoorman
+    * `pip3 install laptools` (Python 3.5+)
 
 # Output
 The script will produce output similar to what's shown below. Some things to note are:
